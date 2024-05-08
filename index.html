@@ -14,8 +14,34 @@
     <div id="app"></div>
 
     <script>
-      const createRoot = (root, component) => {
+      const root = document.getElementById("app");
+      const state = [];
+      let i = 0;
+
+      const renderRoot = (root, component) => {
+        i = 0;
+        root.firstChild?.remove();
+        // console.log(root.firstChild);
         render(component, root);
+      };
+
+      const useState = (initialData) => {
+        // freezes the index by creating a new number and clojure
+        const curIndex = Number(i);
+
+        // setting state only on first render
+        if (state[curIndex] == undefined) {
+          state[curIndex] = initialData;
+        }
+
+        const setState = (data) => {
+          state[curIndex] = data;
+          renderRoot(root, AppComponent());
+        };
+
+        i += 1;
+
+        return [state[curIndex], setState];
       };
 
       const render = (node, parent) => {
@@ -75,6 +101,12 @@
       });
 
       const AppComponent = Component(() => {
+        const [state, setState] = useState(0);
+        const [input, setInput] = useState("");
+
+        console.log("state", state);
+        console.log("inputState", input);
+
         return CustomElement("div", {
           className: "flex flex-col min-h-screen bg-zinc-800",
           children: [
@@ -85,19 +117,31 @@
             }),
             Container({
               children: CustomElement("div", {
-                className: "flex flex-col gap-4",
+                className: "flex flex-col items-center gap-4",
                 children: [
-                  CustomElement("button", {
-                    className:
-                      "px-4 py-2 rounded-md bg-purple-400 text-white hover:opacity-80",
-                    onclick: () => alert("We are friends now XD"),
-                    children: "CLICK-ME XD",
+                  CustomElement("div", {
+                    children: state,
                   }),
                   CustomElement("button", {
                     className:
-                      "px-4 py-2 rounded-md bg-purple-400 text-white hover:opacity-80",
-                    onclick: () => alert("Leave me alone!(tetsuo flashbacks)"),
-                    children: "Do not click me, pls :(",
+                      "px-4 py-2 rounded-md w-16 flex justify-center bg-purple-400 text-white hover:opacity-80",
+                    onclick: () => setState(state + 1),
+                    children: "+",
+                  }),
+                  CustomElement("button", {
+                    className:
+                      "px-4 py-2 rounded-md w-16 flex justify-center bg-purple-400 text-white hover:opacity-80",
+                    onclick: () => setState(state - 1),
+                    children: "-",
+                  }),
+                  CustomElement("input", {
+                    value: input,
+                    oninput: (e) => setInput(e.target.value),
+                    className: "text-black",
+                  }),
+                  CustomElement("div", {
+                    children: input,
+                    onchange: (e) => e.preventDefault()
                   }),
                 ],
               }),
@@ -106,8 +150,7 @@
         });
       });
 
-      const root = document.getElementById("app");
-      createRoot(root, AppComponent());
+      renderRoot(root, AppComponent());
     </script>
   </body>
 </html>
