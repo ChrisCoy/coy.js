@@ -59,10 +59,9 @@
           // Div(observer`Counter: ${counter()}`),
           Div(
             sub`Content: ${counter} 312 321 321 1`,
-            sub(() => ({ className: counter() })),
+            sub(() => ({ className: counter() + counter() })),
             "lol"
           ),
-          // Div(() => Div(Div(Div(`Counter: ${counter()}`)))),
           Br(),
           Button("minus", props({ onclick: dispatchMinusEvent })),
           Button("plus", props({ onclick: dispatchPlusEvent }))

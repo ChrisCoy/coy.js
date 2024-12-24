@@ -3,16 +3,15 @@ let isRendering = false;
 
 function literalsToString(strings, values) {
   const result = strings.reduce((acc, str, i) => {
-      const value = typeof values[i] === 'function' ? values[i]() : values[i];
-      return acc + str + (value !== undefined ? value : '');
-  }, '');
+    const value = typeof values[i] === "function" ? values[i]() : values[i];
+    return acc + str + (value !== undefined ? value : "");
+  }, "");
 
   return result;
 }
 
 class Subscriber {
   constructor(first, ...args) {
-    debugger
     if (typeof first === "function") {
       this.type = "function";
       this.func = first;
@@ -105,7 +104,6 @@ class BaseComponent {
   }
 
   // #eventCallBack() {
-  //   debugger;
   //   this.props.onUpdate?.(this.el, this.props);
   // }
 
@@ -122,20 +120,6 @@ class BaseComponent {
     if (typeofChild === "function") {
       let oldChild = child();
       const element = this.#createElement(oldChild);
-
-      // if (stack != 0) {
-      //   stack = 0;
-      //   effect(() => {
-      //     debugger;
-      //     // criar uma função de patch, onde ela vai receber a função que vai criar a outra arvore, e o node atual
-      //     const content = child();
-
-      //     if (isStringNodeByTypeof(typeof content)) {
-      //       element.textContent = content;
-      //       return;
-      //     }
-      //   });
-      // }
 
       return element;
     }
@@ -161,7 +145,6 @@ class BaseComponent {
     Object.assign(this.el, this.props);
 
     this.children?.forEach((c, index) => {
-      debugger;
       if (c instanceof Subscriber) {
         if (c.type === "function") {
           effect(() => {
@@ -171,7 +154,7 @@ class BaseComponent {
           const textNode = document.createTextNode("");
 
           effect(() => {
-            const text = literalsToString(c.strings, c.values)
+            const text = literalsToString(c.strings, c.values);
 
             textNode.textContent = text;
           });

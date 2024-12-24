@@ -18,38 +18,6 @@ function Button(...args) {
   return new BaseComponent("button", args);
 }
 
-function CText(...args) {
-  let signal = null;
-  const { props_objs, text } = args.reduce(
-    (acc, arg) => {
-      if (cur !== null) {
-        debugger;
-        signal = cur;
-        cur = null;
-      }
-
-      if (arg instanceof Props) {
-        Object.assign(acc.props_objs, arg.props);
-        return acc;
-      }
-
-      acc.text += arg;
-      return acc;
-    },
-    { props_objs: {}, text: "" }
-  );
-
-  const oldOnUpdate = props_objs.onUpdate;
-
-  props_objs.onUpdate = (el, props) => {
-    debugger;
-    const textResult = oldOnUpdate?.(text);
-    el.textContent = textResult;
-  };
-
-  return new BaseComponent("text", [props(props_objs), text]);
-}
-
 const Show = ({ when, child, fallBack }) => {};
 
 
