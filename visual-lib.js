@@ -1,6 +1,32 @@
 let context = null;
-let stack = 0;
 let isRendering = false;
+
+function literalsToString(strings, values) {
+  const result = strings.reduce((acc, str, i) => {
+      const value = typeof values[i] === 'function' ? values[i]() : values[i];
+      return acc + str + (value !== undefined ? value : '');
+  }, '');
+
+  return result;
+}
+
+class Subscriber {
+  constructor(first, ...args) {
+    debugger
+    if (typeof first === "function") {
+      this.type = "function";
+      this.func = first;
+    } else {
+      this.type = "literals";
+      this.strings = first;
+      this.values = args;
+    }
+  }
+}
+
+function sub(...args) {
+  return new Subscriber(...args);
+}
 
 function signal(value) {
   const subscriptions = new Set();
@@ -10,17 +36,15 @@ function signal(value) {
   const getState = () => {
     if (context) subscriptions.add(context);
 
-    if (isRendering) {
-      stack++;
-    }
-
     return value;
   };
+  getState.type = "$$SignalGetter";
 
   const setState = (updated) => {
     value = updated;
     runSubs();
   };
+  setState.type = "$$SignalSetter";
 
   return [getState, setState];
 }
@@ -40,12 +64,6 @@ function computed(fn) {
 
   return getState;
 }
-
-// let [getCount, setCount] = signal(0);
-
-// effect(() => {
-//   console.log(getCount());
-// });
 
 class BaseComponent {
   el;
@@ -98,26 +116,6 @@ class BaseComponent {
     // );
   }
 
-  #patch(oldNode, newNode) {
-    debugger;
-    if (
-      !(oldNode instanceof BaseComponent) ||
-      !(newNode instanceof BaseComponent)
-    ) {
-      throw new Error("cannot patch new state");
-    }
-
-    if (oldNode.el === newNode.el) {
-      return;
-    }
-
-    if (oldNode.el.textContent !== newNode.el.textContent) {
-      oldNode.el.textContent = newNode.el.textContent;
-    }
-
-    // if()
-  }
-
   #createElement(child) {
     const typeofChild = typeof child;
 
@@ -125,21 +123,19 @@ class BaseComponent {
       let oldChild = child();
       const element = this.#createElement(oldChild);
 
-      if (stack != 0) {
-        stack = 0;
-        effect(() => {
-          debugger;
-          // criar uma função de patch, onde ela vai receber a função que vai criar a outra arvore, e o node atual
-          const content = child();
+      // if (stack != 0) {
+      //   stack = 0;
+      //   effect(() => {
+      //     debugger;
+      //     // criar uma função de patch, onde ela vai receber a função que vai criar a outra arvore, e o node atual
+      //     const content = child();
 
-          if (isStringNodeByTypeof(typeof content)) {
-            element.textContent = content;
-            return;
-          }
-
-          this.#patch(oldChild, content);
-        });
-      }
+      //     if (isStringNodeByTypeof(typeof content)) {
+      //       element.textContent = content;
+      //       return;
+      //     }
+      //   });
+      // }
 
       return element;
     }
@@ -165,7 +161,26 @@ class BaseComponent {
     Object.assign(this.el, this.props);
 
     this.children?.forEach((c, index) => {
-      this.el.appendChild(this.#createElement(c));
+      debugger;
+      if (c instanceof Subscriber) {
+        if (c.type === "function") {
+          effect(() => {
+            Object.assign(this.el, c.func(this.props));
+          });
+        } else {
+          const textNode = document.createTextNode("");
+
+          effect(() => {
+            const text = literalsToString(c.strings, c.values)
+
+            textNode.textContent = text;
+          });
+
+          this.el.appendChild(textNode);
+        }
+      } else {
+        this.el.appendChild(this.#createElement(c));
+      }
 
       // if (c instanceof BaseComponent) {
       //   this.el.appendChild(c.el);

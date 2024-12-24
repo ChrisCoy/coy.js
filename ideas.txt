@@ -82,3 +82,9 @@ console.log(Number(getValue));   // Saída: 10 (conversão para número)
 setValue(42);
 console.log(getValue());         // Saída: 42
 console.log(`${getValue}`);      // Saída: "<$!>"
+
+
+        // fazer com que o toString do signal retorne um markup como $<$!> dai ao
+        // ser usado no template podera mais tarde ter o valor trocado.
+        // dai pra contornar a possibilidade de poder ser usar varios signals
+        // pode ser usado um array para colocar as funções de atualização lá

@@ -47,11 +47,6 @@
           setCounter(counter() + 1);
         };
 
-        // fazer com que o toString do signal retorne um markup como $<$!> dai ao
-        // ser usado no template podera mais tarde ter o valor trocado.
-        // dai pra contornar a possibilidade de poder ser usar varios signals
-        // pode ser usado um array para colocar as funções de atualização lá
-
         // return Div(
         //   Heading({ level: 1 }, "Counter"),
         //   CText(`Counter: ${counter}`),
@@ -63,10 +58,11 @@
           Heading({ level: 1 }, "Counter"),
           // Div(observer`Counter: ${counter()}`),
           Div(
-            "Content",
-            // props({ className: observer(() => counter() + counter()) })
+            sub`Content: ${counter} 312 321 321 1`,
+            sub(() => ({ className: counter() })),
+            "lol"
           ),
-          Div(() => Div(Div(Div(`Counter: ${counter()}`)))),
+          // Div(() => Div(Div(Div(`Counter: ${counter()}`)))),
           Br(),
           Button("minus", props({ onclick: dispatchMinusEvent })),
           Button("plus", props({ onclick: dispatchPlusEvent }))
