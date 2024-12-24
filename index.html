@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teste</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="./utils.js"></script>
+    <script src="./visual-lib.js"></script>
+    <script src="./components.js"></script>
+    <script src="./bootstrap.js"></script>
+
+    <script>
+      // setInterval(() => count.value++, 2000);
+
+      // butao.addEventListener("click", () => {
+      //   setCount(getCount() + 1);
+      // });
+      // const app = document.getElementById("app");
+      // let data = null;
+
+      // async function getMyRepo() {
+      //   const response = await fetch(
+      //     "https://api.github.com/users/chriscoy/repos"
+      //   );
+      //   data = await response.json();
+      //   window.dispatchEvent(new Event("repos:fetch-done"));
+      // }
+
+      // const CustomComponent = () => {
+      //   return Div(Heading({ level: 1 }, "My Repos"));
+      // };
+
+      const Icon = (type) => {
+        return type;
+      };
+
+      const Root2 = () => {
+        let [counter, setCounter] = signal(0);
+        const dispatchMinusEvent = () => {
+          setCounter(counter() - 1);
+        };
+
+        const dispatchPlusEvent = () => {
+          setCounter(counter() + 1);
+        };
+
+        // fazer com que o toString do signal retorne um markup como $<$!> dai ao
+        // ser usado no template podera mais tarde ter o valor trocado.
+        // dai pra contornar a possibilidade de poder ser usar varios signals
+        // pode ser usado um array para colocar as funções de atualização lá
+
+        // return Div(
+        //   Heading({ level: 1 }, "Counter"),
+        //   CText(`Counter: ${counter}`),
+        //   Br(),
+        //   Button("minus", props({ onclick: dispatchMinusEvent })),
+        //   Button("plus", props({ onclick: dispatchPlusEvent }))
+        // );
+        return Div(
+          Heading({ level: 1 }, "Counter"),
+          // Div(observer`Counter: ${counter()}`),
+          Div(
+            "Content",
+            // props({ className: observer(() => counter() + counter()) })
+          ),
+          Div(() => Div(Div(Div(`Counter: ${counter()}`)))),
+          Br(),
+          Button("minus", props({ onclick: dispatchMinusEvent })),
+          Button("plus", props({ onclick: dispatchPlusEvent }))
+        );
+      };
+
+      bootstrap(app, Root2);
+
+      const ev = new Event("Teste");
+    </script>
+  </body>
+</html>

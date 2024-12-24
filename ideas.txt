@@ -1,0 +1,84 @@
+function signal(value) {
+    const handler = {
+        apply(target, thisArg, args) {
+            // Quando chamado normalmente (ex: get())
+            return value;
+        },
+        toString() {
+            // Quando usado em template string ou convertido para string
+            return "<$!>";
+        },
+        get(target, prop) {
+            // Garante o uso de toString() em casos não explícitos
+            if (prop === 'toString') return () => "<$!>";
+            return Reflect.get(target, prop);
+        }
+    };
+
+    // Proxy para o getter
+    const getter = new Proxy(function () {}, handler);
+
+    function setter(newValue) {
+        value = newValue;
+    }
+
+    return [getter, setter];
+}
+
+const [getValue, setValue] = signal(10);
+
+// Chamando normalmente
+console.log(getValue()); // Saída: 10
+
+// Chamando dentro de template strings
+console.log(`${getValue}`);       // Saída: "<$!>"
+console.log(`${getValue()}`);     // Saída: "<$!>"
+console.log(String(getValue));    // Saída: "<$!>"
+
+// Alterando o valor
+setValue(42);
+console.log(getValue()); // Saída: 42
+console.log(`${getValue}`); // Saída: "<$!>"
+
+
+#########################################################################################
+
+function signal(value) {
+    const getter = function () {
+        return value; // Retorna o valor normal
+    };
+
+    // Adiciona comportamentos especiais em `toString` e `valueOf`
+    Object.defineProperty(getter, "toString", {
+        value: () => "<$!>",
+        writable: false,
+        enumerable: false,
+        configurable: false
+    });
+
+    Object.defineProperty(getter, "valueOf", {
+        value: () => value,
+        writable: false,
+        enumerable: false,
+        configurable: false
+    });
+
+    function setter(newValue) {
+        value = newValue; // Atualiza o valor
+    }
+
+    return [getter, setter];
+}
+
+const [getValue, setValue] = signal(10);
+
+// Testes
+console.log(getValue());         // Saída: 10 (chamada normal)
+console.log(`${getValue}`);      // Saída: "<$!>" (template string)
+console.log(String(getValue));   // Saída: "<$!>" (conversão para string)
+console.log(Number(getValue));   // Saída: 10 (conversão para número)
+
+// Alterando o valor
+setValue(42);
+console.log(getValue());         // Saída: 42
+console.log(`${getValue}`);      // Saída: "<$!>"
