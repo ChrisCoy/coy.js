@@ -1,9 +1,7 @@
-
-
 function bootstrap(root, component) {
   window.firstRender = true;
-  if(typeof component !== "function"){
-    throw new Error("component must be a function")
+  if (typeof component !== "function") {
+    throw new Error("component must be a function");
   }
 
   const el = component();

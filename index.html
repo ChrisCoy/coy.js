@@ -7,20 +7,14 @@
   </head>
   <body>
     <div id="app"></div>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./signal.js"></script>
     <script src="./utils.js"></script>
-    <script src="./visual-lib.js"></script>
+    <script src="./coy.js"></script>
     <script src="./components.js"></script>
     <script src="./bootstrap.js"></script>
 
     <script>
-      // setInterval(() => count.value++, 2000);
-
-      // butao.addEventListener("click", () => {
-      //   setCount(getCount() + 1);
-      // });
-      // const app = document.getElementById("app");
-      // let data = null;
-
       // async function getMyRepo() {
       //   const response = await fetch(
       //     "https://api.github.com/users/chriscoy/repos"
@@ -29,48 +23,222 @@
       //   window.dispatchEvent(new Event("repos:fetch-done"));
       // }
 
-      // const CustomComponent = () => {
-      //   return Div(Heading({ level: 1 }, "My Repos"));
+      // const Root2 = () => {
+      //   const [counter, setCounter] = signal(0);
+      //   const [another, setAnother] = signal(42);
+      //   const [inputText, setInputText] = signal("");
+
+      //   const comp = computed(() => counter() + another());
+
+      //   const memoized = memo(() => counter() + another());
+
+      //   effect(() => {
+      //     console.log("comp", comp());
+      //   });
+
+      //   setInterval(() => {
+      //     setCounter(counter());
+      //     setAnother(another());
+      //   }, 2000);
+
+      //   effect(() => {
+      //     console.log("memoized", memoized());
+      //   });
+
+      //   effect(() => {
+      //     console.log("input", inputText());
+      //   });
+
+      //   const onMinus = () => {
+      //     setCounter(counter() - 1);
+      //   };
+
+      //   const onPlus = () => {
+      //     setCounter(counter() + 1);
+      //   };
+
+      //   return Div(
+      //     $props({
+      //       id: "algumacoisa",
+      //       style: {
+      //         display: "flex",
+      //         flexDirection: "column",
+      //         padding: react(() => `${counter()}px`),
+      //       },
+      //     }),
+      //     Heading({ level: 1 }, "Counter"),
+      //     Div(
+      //       text(() => `clicked: ${counter()} times`),
+      //       $props({ className: react(() => counter() + another()) })
+      //     ),
+      //     Br(),
+      //     Button("minus", $props({ onclick: onMinus })),
+      //     Button("plus", $props({ onclick: onPlus })),
+      //     Br(),
+      //     Br(),
+      //     Input(
+      //       $props({
+      //         placeholder: "test",
+      //         value: inputText,
+      //         oninput: (e) => setInputText(e.target.value),
+      //       })
+      //     ),
+      //     inputText
+      //   );
       // };
 
-      const Icon = (type) => {
-        return type;
-      };
+      // const TextShow = () => {
+      //   const [isShow, setIsShow] = signal(false);
 
-      const Root2 = () => {
-        let [counter, setCounter] = signal(0);
-        const dispatchMinusEvent = () => {
-          setCounter(counter() - 1);
-        };
+      //   const toggleIsShow = () => {
+      //     setIsShow(!isShow());
+      //   };
 
-        const dispatchPlusEvent = () => {
-          setCounter(counter() + 1);
-        };
+      //   return Div(
+      //     "Teste",
+      //     Button("Sumir", $props({ onclick: toggleIsShow })),
+      //     Show({
+      //       when: isShow,
+      //       child: Div("To aparecendo hihi", Div("otadiv1")),
+      //       // fallBack: Div("fallBack", Div("otadiv2")),
+      //     })
+      //   );
+      // };
 
-        // return Div(
-        //   Heading({ level: 1 }, "Counter"),
-        //   CText(`Counter: ${counter}`),
-        //   Br(),
-        //   Button("minus", props({ onclick: dispatchMinusEvent })),
-        //   Button("plus", props({ onclick: dispatchPlusEvent }))
-        // );
+      const Layout = (child) => {
         return Div(
-          Heading({ level: 1 }, "Counter"),
-          // Div(observer`Counter: ${counter()}`),
-          Div(
-            sub`Content: ${counter} 312 321 321 1`,
-            sub(() => ({ className: counter() + counter() })),
-            "lol"
-          ),
-          Br(),
-          Button("minus", props({ onclick: dispatchMinusEvent })),
-          Button("plus", props({ onclick: dispatchPlusEvent }))
+          $props({
+            className:
+              "min-h-screen w-full grid place-items-center bg-zinc-100 p-4",
+          }),
+          child
         );
       };
 
-      bootstrap(app, Root2);
+      const TodoItem = ({ name, done, onDone, onRemove }) => {
+        return Div(
+          $props({
+            className: cn(() => [
+              "flex justify-between gap-4 items-center p-2 w-full mb-1",
+              done && "bg-red-100",
+            ]),
+          }),
+          Div(
+            $props({
+              className: cn(() => [done && "line-through"]),
+            }),
+            name
+          ),
+          Div(
+            Button(
+              $props({
+                onclick: onDone,
+                className: cn(
+                  "h-10 px-3 rounded font-bold text-1xl transition",
+                  done && "hover:bg-red-50 bg-red-200",
+                  !done && "hover:bg-green-50 bg-green-100"
+                ),
+              }),
+              done ? "❌" : "✅"
+            ),
+            Button(
+              $props({
+                onclick: onRemove,
+                className: cn(
+                  "ml-4 h-10 px-3 rounded font-bold text-1xl transition",
+                  "hover:bg-red-50 bg-red-200"
+                ),
+              }),
+              "🗑️"
+            )
+          )
+        );
+      };
 
-      const ev = new Event("Teste");
+      const TodoApp = () => {
+        const [inputText, setInputText] = signal("");
+        const [todos, setTodos] = signal([
+          { id: genId(), name: "build a front-end lib", done: true },
+        ]);
+
+        const handleTodoToggle = (id) => {
+          setTodos(
+            todos().map((t) => {
+              if (t.id === id) t.done = !t.done;
+              return t;
+            })
+          );
+        };
+
+        const handleRemoveTodo = (id) => {
+          setTodos(todos().filter((t) => t.id !== id));
+        };
+
+        const handleAddTodo = () => {
+          if (inputText().length === 0) {
+            alert("you cannot create a empty todo!");
+            return;
+          }
+          setTodos([
+            ...todos(),
+            { id: genId(), name: inputText(), done: false },
+          ]);
+          setInputText("");
+        };
+
+        return Layout(
+          Div(
+            $props({
+              className:
+                "flex flex-col gap-4 border p-4 bg-white rounded max-w-[600px] w-full",
+            }),
+            H1($props({ className: "text-lg font-bold" }), "Todo App"),
+            Hr(),
+            Show({
+              when: react(() => todos().length > 0),
+              content: Div(
+                $props({ className: "max-h-[300px] overflow-auto" }),
+                List({
+                  data: todos,
+                  render: (todo) =>
+                    TodoItem({
+                      name: todo.name,
+                      done: todo.done,
+                      onDone: () => handleTodoToggle(todo.id),
+                      onRemove: () => handleRemoveTodo(todo.id),
+                    }),
+                })
+              ),
+              fallBack: Div(
+                $props({ className: "text-center" }),
+                "Nenhuma todo cadastrada."
+              ),
+            }),
+            Hr(),
+            Div(
+              $props({ className: "flex gap-4" }),
+              Input(
+                $props({
+                  placeholder: "Your next incredible task",
+                  oninput: (e) => setInputText(e.target.value),
+                  value: inputText,
+                  className: "h-10 px-2 bg-zinc-100 w-full",
+                })
+              ),
+              Button(
+                $props({
+                  className:
+                    "h-10 px-4 rounded bg-green-500 text-white hover:bg-green-400 transition",
+                  onclick: handleAddTodo,
+                }),
+                "Criar"
+              )
+            )
+          )
+        );
+      };
+
+      bootstrap(app, TodoApp);
     </script>
   </body>
 </html>
