@@ -47,7 +47,9 @@ const List = ({ data, render }) => {
 
     effect(() => {
       const result = data() || [];
-      const componentsArray = result.map(render).map((c) => c.el);
+      const componentsArray = result
+        .map((e) => render(react(() => e)))
+        .map((c) => c.el);
 
       fragment.el.replaceChildren(...componentsArray);
     });

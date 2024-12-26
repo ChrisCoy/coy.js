@@ -2,7 +2,7 @@ let context = null;
 
 var teste = "algum valor lol";
 
-window.$$_stack = []
+window.$$_stack = [];
 
 function signal(value) {
   const subscriptions = new Set();
@@ -11,8 +11,6 @@ function signal(value) {
 
   const getState = () => {
     if (context) subscriptions.add(context);
-
-    window.$$_stack.push(() => value);
 
     return value;
   };
@@ -42,8 +40,12 @@ function computed(fn) {
 
   return getState;
 }
-const text = computed;
-const react = computed;
+
+const react = (fn) => {
+  fn[$$SignalType] = $$SignalGetter;
+  return fn;
+};
+const text = react;
 
 function memo(fn) {
   const [getState, setState] = signal();

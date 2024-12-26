@@ -41,7 +41,6 @@ class BaseComponent {
   children = [];
 
   constructor(tag, args = []) {
-    console.log("$$_stack", window.$$_stack)
     const { children, props_objs } = args.reduce(
       (acc, arg) => {
         if (arg instanceof Props) {

@@ -44,6 +44,11 @@ const cn = (...args) => {
   return args.flat().filter(Boolean).join(" ");
 };
 
+const genIdd = (function () {
+  this.id = 1;
+  return () => this.id++;
+})();
+
 const genId = (() => {
   let id = 1;
   return () => id++;
