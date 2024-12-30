@@ -34,7 +34,7 @@ const isCoySignal = (fn) => {
 
 const cn = (...args) => {
   if (typeof args[0] === "function") {
-    return computed(() => {
+    return react(() => {
       const result = args[0]();
 
       return cn(result);
@@ -44,12 +44,28 @@ const cn = (...args) => {
   return args.flat().filter(Boolean).join(" ");
 };
 
-const genIdd = (function () {
-  this.id = 1;
-  return () => this.id++;
-})();
-
-const genId = (() => {
+const idGenerator = () => {
   let id = 1;
   return () => id++;
-})();
+};
+
+const signalToObject = ([getter, setter]) => {
+  return { get: getter, set: setter, id: Math.ceil(Math.random() * 100) };
+};
+
+const swipeItemsOnArray = (array, from, to) => {
+  const temp = array[from];
+  array[from] = array[to];
+  array[to] = temp;
+};
+
+function hash(obj) {
+  const jsonString = JSON.stringify(obj);
+  let hash = 0;
+  for (let i = 0; i < jsonString.length; i++) {
+    const char = jsonString.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash |= 0; // Convert to 32-bit integer
+  }
+  return hash;
+}

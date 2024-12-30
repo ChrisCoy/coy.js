@@ -12,21 +12,27 @@
     <script src="./utils.js"></script>
     <script src="./coy.js"></script>
     <script src="./components.js"></script>
+    <script src="./toast.js"></script>
     <script src="./bootstrap.js"></script>
 
     <script>
+      const genId = idGenerator();
+
       const Layout = (child) => {
         return Div(
           $props({
             className:
               "min-h-screen w-full grid place-items-center bg-zinc-100 p-4",
           }),
+          ToastProviderGlobal(),
           child
         );
       };
 
       const TodoItem = ({ todoSignal, onDone, onRemove }) => {
-        console.log(todoSignal());
+        const [text, setText] = signal("");
+        console.log("look how this log only runs once for each item", todoSignal());
+
 
         return Div(
           $props({
@@ -35,6 +41,12 @@
               todoSignal().done && "bg-red-100",
             ]),
           }),
+          Input(
+            $props({
+              value: text,
+              oninput: (e) => setText(e.target.value),
+            })
+          ),
           Div(
             $props({
               className: cn(() => [todoSignal().done && "line-through"]),
@@ -45,13 +57,17 @@
             Button(
               $props({
                 onclick: onDone,
-                className: cn(
+                className: cn(() => [
                   "h-10 px-3 rounded font-bold text-1xl transition",
                   todoSignal().done && "hover:bg-red-50 bg-red-200",
-                  !todoSignal().done && "hover:bg-green-50 bg-green-100"
-                ),
+                  !todoSignal().done && "hover:bg-green-50 bg-green-100",
+                ]),
               }),
-              todoSignal().done ? "❌" : "✅"
+              Show({
+                when: react(() => todoSignal().done),
+                content: "❌",
+                fallBack: "✅",
+              })
             ),
             Button(
               $props({
@@ -68,9 +84,12 @@
       };
 
       const TodoApp = () => {
+        const toast = useToast();
         const [inputText, setInputText] = signal("");
         const [todos, setTodos] = signal([
-          { id: genId(), name: "build a front-end lib", done: true },
+          { id: genId(), name: "1", done: true },
+          { id: genId(), name: "2", done: true },
+          { id: genId(), name: "3", done: false },
         ]);
 
         effect(() => {
@@ -92,7 +111,8 @@
 
         const handleAddTodo = () => {
           if (inputText().length === 0) {
-            alert("you cannot create a empty todo!");
+            // alert("you cannot create a empty todo!");
+            toast("you cannot create a empty todo!")
             return;
           }
           setTodos([
@@ -116,6 +136,7 @@
                 $props({ className: "max-h-[300px] overflow-auto" }),
                 List({
                   data: todos,
+                  keyExtractor: (todo) => todo().id,
                   render: (todo) =>
                     TodoItem({
                       todoSignal: todo,
@@ -146,7 +167,21 @@
                     "h-10 px-4 rounded bg-green-500 text-white hover:bg-green-400 transition",
                   onclick: handleAddTodo,
                 }),
-                "Criar"
+                "create"
+              ),
+              Button(
+                $props({
+                  className:
+                    "h-10 px-4 rounded bg-green-500 text-white hover:bg-green-400 transition text-nowrap",
+                  onclick: () => {
+                    setTodos(
+                      todos()
+                        .map((t) => ({ ...t, done: true }))
+                        .reverse()
+                    );
+                  },
+                }),
+                "invert and done"
               )
             )
           )

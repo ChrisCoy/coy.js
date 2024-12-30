@@ -1,9 +1,5 @@
 let context = null;
 
-var teste = "algum valor lol";
-
-window.$$_stack = [];
-
 function signal(value) {
   const subscriptions = new Set();
 
