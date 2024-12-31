@@ -69,3 +69,5 @@ function hash(obj) {
   }
   return hash;
 }
+
+const hasDuplicates = (arr) => new Set(arr).size !== arr.length;

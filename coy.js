@@ -1,5 +1,4 @@
 // TODO: FRAGMENTS
-// TODO: think in a way of separate the html props from the custom props
 // TODO: better errors to show if a signal was used in the wrong way
 
 function setPropertiesAndListenToSignals(cursor, key, prop) {
@@ -68,41 +67,6 @@ class BaseComponent {
     this.el.remove();
   }
 
-  // TODO: remove this function from here and put it as a lib function
-  createElement(child) {
-    const typeofChild = typeof child;
-
-    if (typeofChild === "function") {
-      let result = child();
-      const element = this.createElement(result);
-
-      if (isCoySignal(child)) {
-        effect(() => {
-          // TODO: MAKE THIS BE ABLE TO RETURN COMPONENTS
-          element.textContent = child();
-        });
-      }
-
-      return element;
-    }
-
-    if (child instanceof BaseComponent) {
-      return {
-        node: child.el,
-        raw: child,
-      };
-    }
-
-    if (isStringNodeByTypeof(typeofChild)) {
-      return {
-        node: document.createTextNode(child + ""),
-        raw: child,
-      };
-    }
-
-    throw new Error(`invalid element type: ${typeofChild}`);
-  }
-
   #create(tag, children) {
     this.el = document.createElement(tag);
 
@@ -119,7 +83,7 @@ class BaseComponent {
     // }
 
     children?.forEach((c) => {
-      const element = this.createElement(c);
+      const element = createElement(c);
       this.el.appendChild(element.node);
       this.nodes.push(element);
     });

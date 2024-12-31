@@ -31,7 +31,7 @@ Define your components using the provided functions and classes. Here is an exam
 ```javascript
 const Layout = (child) => {
   return Div(
-    $props({
+    props({
       className: "min-h-screen w-full grid place-items-center bg-zinc-100 p-4",
     }),
     child
@@ -40,21 +40,21 @@ const Layout = (child) => {
 
 const TodoItem = ({ todoSignal, onDone, onRemove }) => {
   return Div(
-    $props({
+    props({
       className: cn(() => [
         "flex justify-between gap-4 items-center p-2 w-full mb-1",
         todoSignal().done && "bg-red-100",
       ]),
     }),
     Div(
-      $props({
+      props({
         className: cn(() => [todoSignal().done && "line-through"]),
       }),
       todoSignal().name
     ),
     Div(
       Button(
-        $props({
+        props({
           onclick: onDone,
           className: cn(
             "h-10 px-3 rounded font-bold text-1xl transition",
@@ -65,7 +65,7 @@ const TodoItem = ({ todoSignal, onDone, onRemove }) => {
         todoSignal().done ? "❌" : "✅"
       ),
       Button(
-        $props({
+        props({
           onclick: onRemove,
           className: cn(
             "ml-4 h-10 px-3 rounded font-bold text-1xl transition",
@@ -111,15 +111,15 @@ const TodoApp = () => {
 
   return Layout(
     Div(
-      $props({
+      props({
         className: "flex flex-col gap-4 border p-4 bg-white rounded max-w-[600px] w-full",
       }),
-      H1($props({ className: "text-lg font-bold" }), "Todo App"),
+      H1(props({ className: "text-lg font-bold" }), "Todo App"),
       Hr(),
       Show({
         when: react(() => todos().length > 0),
         content: Div(
-          $props({ className: "max-h-[300px] overflow-auto" }),
+          props({ className: "max-h-[300px] overflow-auto" }),
           List({
             data: todos,
             render: (todo) =>
@@ -131,15 +131,15 @@ const TodoApp = () => {
           })
         ),
         fallBack: Div(
-          $props({ className: "text-center" }),
+          props({ className: "text-center" }),
           "No todos available."
         ),
       }),
       Hr(),
       Div(
-        $props({ className: "flex gap-4" }),
+        props({ className: "flex gap-4" }),
         Input(
-          $props({
+          props({
             placeholder: "Your next incredible task",
             oninput: (e) => setInputText(e.target.value),
             value: inputText,
@@ -147,7 +147,7 @@ const TodoApp = () => {
           })
         ),
         Button(
-          $props({
+          props({
             className: "h-10 px-4 rounded bg-green-500 text-white hover:bg-green-400 transition",
             onclick: handleAddTodo,
           }),

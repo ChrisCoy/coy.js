@@ -8,8 +8,8 @@
   <body>
     <div id="app"></div>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="./signal.js"></script>
     <script src="./utils.js"></script>
+    <script src="./signal.js"></script>
     <script src="./coy.js"></script>
     <script src="./components.js"></script>
     <script src="./toast.js"></script>
@@ -20,7 +20,7 @@
 
       const Layout = (child) => {
         return Div(
-          $props({
+          props({
             className:
               "min-h-screen w-full grid place-items-center bg-zinc-100 p-4",
           }),
@@ -31,31 +31,30 @@
 
       const TodoItem = ({ todoSignal, onDone, onRemove }) => {
         const [text, setText] = signal("");
-        console.log("look how this log only runs once for each item", todoSignal());
-
+        // console.log("look how this log only runs once for each item", todoSignal());
 
         return Div(
-          $props({
+          props({
             className: cn(() => [
               "flex justify-between gap-4 items-center p-2 w-full mb-1",
               todoSignal().done && "bg-red-100",
             ]),
           }),
           Input(
-            $props({
+            props({
               value: text,
               oninput: (e) => setText(e.target.value),
             })
           ),
           Div(
-            $props({
+            props({
               className: cn(() => [todoSignal().done && "line-through"]),
             }),
             todoSignal().name
           ),
           Div(
             Button(
-              $props({
+              props({
                 onclick: onDone,
                 className: cn(() => [
                   "h-10 px-3 rounded font-bold text-1xl transition",
@@ -70,7 +69,7 @@
               })
             ),
             Button(
-              $props({
+              props({
                 onclick: onRemove,
                 className: cn(
                   "ml-4 h-10 px-3 rounded font-bold text-1xl transition",
@@ -92,10 +91,6 @@
           { id: genId(), name: "3", done: false },
         ]);
 
-        effect(() => {
-          console.log("todos", todos());
-        });
-
         const handleTodoToggle = (id) => {
           setTodos(
             todos().map((t) => {
@@ -111,8 +106,7 @@
 
         const handleAddTodo = () => {
           if (inputText().length === 0) {
-            // alert("you cannot create a empty todo!");
-            toast("you cannot create a empty todo!")
+            toast("you cannot create a empty todo!");
             return;
           }
           setTodos([
@@ -124,37 +118,34 @@
 
         return Layout(
           Div(
-            $props({
+            props({
               className:
                 "flex flex-col gap-4 border p-4 bg-white rounded max-w-[600px] w-full",
             }),
-            H1($props({ className: "text-lg font-bold" }), "Todo App"),
+            H1(props({ className: "text-lg font-bold" }), "Todo App"),
             Hr(),
-            Show({
-              when: react(() => todos().length > 0),
-              content: Div(
-                $props({ className: "max-h-[300px] overflow-auto" }),
-                List({
-                  data: todos,
-                  keyExtractor: (todo) => todo().id,
-                  render: (todo) =>
-                    TodoItem({
-                      todoSignal: todo,
-                      onDone: () => handleTodoToggle(todo().id),
-                      onRemove: () => handleRemoveTodo(todo().id),
-                    }),
-                })
+            ListView({
+              data: todos,
+              keyExtractor: (todo) => todo().id,
+              container: Div(
+                props({ className: "max-h-[300px] overflow-auto" })
               ),
-              fallBack: Div(
-                $props({ className: "text-center" }),
+              render: (todo) =>
+                TodoItem({
+                  todoSignal: todo,
+                  onDone: () => handleTodoToggle(todo().id),
+                  onRemove: () => handleRemoveTodo(todo().id),
+                }),
+              empty: Div(
+                props({ className: "text-center" }),
                 "Nenhuma todo cadastrada."
               ),
             }),
             Hr(),
             Div(
-              $props({ className: "flex gap-4" }),
+              props({ className: "flex gap-4" }),
               Input(
-                $props({
+                props({
                   placeholder: "Your next incredible task",
                   oninput: (e) => setInputText(e.target.value),
                   value: inputText,
@@ -162,7 +153,7 @@
                 })
               ),
               Button(
-                $props({
+                props({
                   className:
                     "h-10 px-4 rounded bg-green-500 text-white hover:bg-green-400 transition",
                   onclick: handleAddTodo,
@@ -170,18 +161,24 @@
                 "create"
               ),
               Button(
-                $props({
+                props({
                   className:
-                    "h-10 px-4 rounded bg-green-500 text-white hover:bg-green-400 transition text-nowrap",
+                    "h-10 px-4 rounded bg-blue-500 text-white hover:bg-blue-400 transition text-nowrap",
                   onclick: () => {
-                    setTodos(
-                      todos()
-                        .map((t) => ({ ...t, done: true }))
-                        .reverse()
-                    );
+                    setTodos((t) => t.reverse());
                   },
                 }),
-                "invert and done"
+                "invert"
+              ),
+              Button(
+                props({
+                  className:
+                    "h-10 px-4 rounded bg-orange-500 text-white hover:bg-orange-400 transition text-nowrap",
+                  onclick: () => {
+                    setTodos((t) => t.map((td) => ({ ...td, done: !td.done })));
+                  },
+                }),
+                "toggle all"
               )
             )
           )
