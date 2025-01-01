@@ -74,6 +74,12 @@ class BaseComponent {
       setPropertiesAndListenToSignals(this.el, key, value);
     });
 
+    children?.forEach((c) => {
+      const element = createElement(c);
+      this.el.appendChild(element.node);
+      this.nodes.push(element);
+    });
+
     // else if (tag === "text") {
     //   if (this.props) {
     //     console.warn("props are ignored on text nodes");
@@ -81,12 +87,6 @@ class BaseComponent {
 
     //   this.el = document.createTextNode("");
     // }
-
-    children?.forEach((c) => {
-      const element = createElement(c);
-      this.el.appendChild(element.node);
-      this.nodes.push(element);
-    });
   }
 
   appendChild(element) {
@@ -132,7 +132,7 @@ class BaseComponent {
       throw new Error(`Invalid to position ${to} at BaseComponent.swapChild`);
     }
 
-    if(from === to) return;
+    if (from === to) return;
 
     const fromNode = this.nodes[from];
     const toNode = this.nodes[to];
@@ -148,9 +148,9 @@ class BaseComponent {
 
     fromNode.node.insertAdjacentElement("beforebegin", fromTemp);
     toNode.node.insertAdjacentElement("beforebegin", toTemp);
-    
-    fromTemp.replaceWith(toNode.node)
-    toTemp.replaceWith(fromNode.node)
+
+    fromTemp.replaceWith(toNode.node);
+    toTemp.replaceWith(fromNode.node);
   }
 
   replaceChildren(...newChildren) {

@@ -1,20 +1,18 @@
 let context = null;
-
-let genSignalId = idGenerator();
+let untrack = false;
+let batching = false;
+let batchContextStack = new Set();
 
 function signal(value) {
   const subscriptions = new Set();
+  let signalValue = value;
 
   const getState = () => {
-    if (context) subscriptions.add(context);
-    update();
-    return value;
+    if (context && !untrack) subscriptions.add(context);
+
+    return signalValue;
   };
   getState[$$SignalType] = $$SignalGetter;
-
-  const update = () => {
-    getState.value = value;
-  };
 
   const runSubs = () =>
     subscriptions.forEach((sub) => {
@@ -27,10 +25,16 @@ function signal(value) {
 
   const setState = (updated) => {
     if (typeof updated === "function") {
-      value = updated(value);
+      signalValue = updated(signalValue);
     } else {
-      value = updated;
+      signalValue = updated;
     }
+
+    if (batching) {
+      batchContextStack.add(runSubs);
+      return;
+    }
+
     runSubs();
   };
   setState[$$SignalType] = "$$SignalSetter";
@@ -49,6 +53,16 @@ function effectOnDependencies(fn, deps = []) {
   fn();
   context = null;
 }
+
+function untracked(fn) {
+  untrack = true;
+  const result = fn();
+  untrack = false;
+
+  return result;
+}
+
+const peek = untrack;
 
 function computed(fn) {
   const [getState, setState] = signal();
@@ -77,4 +91,12 @@ function memo(fn) {
   });
 
   return getState;
+}
+
+function batch(fn) {
+  batching = true;
+  fn();
+  batchContextStack.forEach((runSubs) => runSubs());
+  batchContextStack = new Set();
+  batching = false;
 }

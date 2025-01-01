@@ -33,6 +33,8 @@ function createElement(child) {
   throw new Error(`invalid element, ${child} of type: ${typeofChild}`);
 }
 
+// TODO: to have a better typescript support we can pass the tag as the generic
+// in the props, example: props<H1>({className: ""}); or props.h1({}) or H1.props({});
 const props = (p) => new Props(p);
 
 /* prettier-ignore */
@@ -61,7 +63,7 @@ const Base = Lazy((...args) => new BaseComponent("base", args));
 const Bdi = Lazy((...args) => new BaseComponent("bdi", args));
 const Bdo = Lazy((...args) => new BaseComponent("bdo", args));
 const Blockquote = Lazy((...args) => new BaseComponent("blockquote", args));
-const Body = Lazy((...args) => new BaseComponent("body", args));
+// const Body = Lazy((...args) => new BaseComponent("body", args));
 const Canvas = Lazy((...args) => new BaseComponent("canvas", args));
 const Caption = Lazy((...args) => new BaseComponent("caption", args));
 const Cite = Lazy((...args) => new BaseComponent("cite", args));
@@ -85,7 +87,7 @@ const Figure = Lazy((...args) => new BaseComponent("figure", args));
 const Footer = Lazy((...args) => new BaseComponent("footer", args));
 const Form = Lazy((...args) => new BaseComponent("form", args));
 const H = Lazy((...args) => new BaseComponent("h", args));
-const Head = Lazy((...args) => new BaseComponent("head", args));
+// const Head = Lazy((...args) => new BaseComponent("head", args));
 const Header = Lazy((...args) => new BaseComponent("header", args));
 const Hgroup = Lazy((...args) => new BaseComponent("hgroup", args));
 const I = Lazy((...args) => new BaseComponent("i", args));
@@ -100,7 +102,7 @@ const Link = Lazy((...args) => new BaseComponent("link", args));
 const Main = Lazy((...args) => new BaseComponent("main", args));
 const MapElement = Lazy((...args) => new BaseComponent("map", args));
 const Mark = Lazy((...args) => new BaseComponent("mark", args));
-const Meta = Lazy((...args) => new BaseComponent("meta", args));
+// const Meta = Lazy((...args) => new BaseComponent("meta", args));
 const Meter = Lazy((...args) => new BaseComponent("meter", args));
 const Nav = Lazy((...args) => new BaseComponent("nav", args));
 const Noscript = Lazy((...args) => new BaseComponent("noscript", args));
@@ -140,7 +142,7 @@ const Tfoot = Lazy((...args) => new BaseComponent("tfoot", args));
 const Th = Lazy((...args) => new BaseComponent("th", args));
 const Thead = Lazy((...args) => new BaseComponent("thead", args));
 const Time = Lazy((...args) => new BaseComponent("time", args));
-const Title = Lazy((...args) => new BaseComponent("title", args));
+// const Title = Lazy((...args) => new BaseComponent("title", args));
 const Tr = Lazy((...args) => new BaseComponent("tr", args));
 const Track = Lazy((...args) => new BaseComponent("track", args));
 const U = Lazy((...args) => new BaseComponent("u", args));
@@ -217,33 +219,35 @@ const List = Lazy(({ data, render, keyExtractor, container }) => {
         }
       }
 
-      for (let i = 0; i < newKeys.length; i++) {
-        const key = newKeys[i];
-        const oldKeyIndex = keys.findIndex((k) => k === key);
+      batch(() => {
+        for (let i = 0; i < newKeys.length; i++) {
+          const key = newKeys[i];
+          const oldKeyIndex = keys.findIndex((k) => k === key);
 
-        // we have to run the signal again because the data may have change.
+          // we have to run the signal again because the data may have change.
 
-        if (oldKeyIndex === i) {
-          // when node stills in the same place
-          signals[i].set(result[i]);
-        } else if (oldKeyIndex === -1) {
-          // when node is new
-          signals.splice(i, 0, signalToObject(signal(result[i])));
+          if (oldKeyIndex === i) {
+            // when node stills in the same place
+            signals[i].set(result[i]);
+          } else if (oldKeyIndex === -1) {
+            // when node is new
+            signals.splice(i, 0, signalToObject(signal(result[i])));
 
-          const component = createElement(render(signals[i].get));
-          container.appendChild(component);
-        } else if (
-          !permutationsIndexes.includes(oldKeyIndex) ||
-          !permutationsIndexes.includes(i)
-        ) {
-          // when node changed it's place
-          swipeItemsOnArray(signals, oldKeyIndex, i);
-          container.swapChild(oldKeyIndex, i);
-          signals[i].set(result[i]);
-          signals[oldKeyIndex].set(result[oldKeyIndex]);
-          permutationsIndexes.push(oldKeyIndex, i);
+            const component = createElement(render(signals[i].get));
+            container.appendChild(component);
+          } else if (
+            !permutationsIndexes.includes(oldKeyIndex) ||
+            !permutationsIndexes.includes(i)
+          ) {
+            // when node changed it's place
+            swipeItemsOnArray(signals, oldKeyIndex, i);
+            container.swapChild(oldKeyIndex, i);
+            signals[i].set(result[i]);
+            signals[oldKeyIndex].set(result[oldKeyIndex]);
+            permutationsIndexes.push(oldKeyIndex, i);
+          }
         }
-      }
+      });
 
       keys = newKeys;
     }, [data]);
