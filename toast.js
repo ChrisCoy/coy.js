@@ -16,7 +16,7 @@ const ToastProviderGlobal = () => {
         props({
           className: "bg-white border p-2 rounded-lg w-full text-center",
         }),
-        text(() => toastSignal().text)
+        react(() => toastSignal().text)
       ),
   });
 };

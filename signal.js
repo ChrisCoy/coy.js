@@ -62,7 +62,7 @@ function untracked(fn) {
   return result;
 }
 
-const peek = untrack;
+const peek = untracked;
 
 function computed(fn) {
   const [getState, setState] = signal();
@@ -78,14 +78,31 @@ const react = (fn) => {
   fn[$$SignalType] = $$SignalGetter;
   return fn;
 };
-const text = react;
 
 function memo(fn) {
   const [getState, setState] = signal();
 
   effect(() => {
     const result = fn();
-    if (result !== getState()) {
+    const oldState = getState();
+
+    if (
+      Array.isArray(result) &&
+      Array.isArray(oldState) &&
+      result.length === oldState.length
+    ) {
+      if (result === oldState) {
+        return;
+      }
+
+      let hasChanges = false;
+      for (let i = 0; i < result.length; i++) {
+        if (result[i] !== oldState[i]) {
+          hasChanges = true;
+          break;
+        }
+      }
+    } else if (result !== oldState) {
       setState(result);
     }
   });
@@ -99,4 +116,37 @@ function batch(fn) {
   batchContextStack.forEach((runSubs) => runSubs());
   batchContextStack = new Set();
   batching = false;
+}
+
+function setPropertiesAndListenToSignals(cursor, key, prop) {
+  const typeofProp = typeof prop;
+
+  if (isStringNodeByTypeof(typeofProp)) {
+    cursor[key] = prop;
+    return;
+  }
+
+  if (typeofProp === "undefined" || prop === null) {
+    return;
+  }
+
+  if (Array.isArray(prop)) {
+    cursor[key] = prop;
+  } else if (typeofProp === "object") {
+    if (!cursor[key]) {
+      cursor[key] = {};
+    }
+
+    Object.entries(prop).forEach(([k, v]) => {
+      setPropertiesAndListenToSignals(cursor[key], k, v);
+    });
+  } else if (typeofProp === "function") {
+    if (isCoySignal(prop)) {
+      effect(() => {
+        cursor[key] = prop();
+      });
+    } else {
+      cursor[key] = prop;
+    }
+  }
 }

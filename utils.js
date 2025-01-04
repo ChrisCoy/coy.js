@@ -25,12 +25,20 @@ const $$SignalGetter = Symbol("$$SignalGetter");
 const $$SignalSetter = Symbol("$$SignalSetter");
 
 const isCoySignal = (fn) => {
-  if (fn[$$SignalType] === $$SignalGetter) {
+  if (fn && fn[$$SignalType] === $$SignalGetter) {
     return true;
   }
 
   return false;
 };
+
+function isCoyComponent(component) {
+  if (component instanceof BaseComponent) {
+    return true;
+  }
+  return false;
+}
+
 
 const cn = (...args) => {
   if (typeof args[0] === "function") {
@@ -71,3 +79,37 @@ function hash(obj) {
 }
 
 const hasDuplicates = (arr) => new Set(arr).size !== arr.length;
+
+function findDuplicates(arr) {
+  const seen = new Set();
+  const duplicates = new Set();
+
+  for (const item of arr) {
+      if (seen.has(item)) {
+          duplicates.add(item);
+      } else {
+          seen.add(item);
+      }
+  }
+
+  return Array.from(duplicates);
+}
+
+
+function populateNodesDOM(node) {
+  for (let i = 0; i < node.children.length; i++) {
+    const component = node.children[i];
+
+    if (node.tag === "fragment") {
+      component.parent = node.parent;
+    } else {
+      component.parent = node;
+    }
+
+    node.appendChild(component, false);
+
+    if (component.children.length > 0) {
+      populateNodesDOM(component);
+    }
+  }
+}

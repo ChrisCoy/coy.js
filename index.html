@@ -10,7 +10,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="./utils.js"></script>
     <script src="./signal.js"></script>
-    <script src="./coy.js"></script>
+    <script src="./baseComponent.js"></script>
+    <script src="./createElement.js"></script>
     <script src="./components.js"></script>
     <script src="./toast.js"></script>
     <script src="./bootstrap.js"></script>
@@ -30,8 +31,10 @@
       };
 
       const TodoItem = ({ todoSignal, onDone, onRemove }) => {
-        const [text, setText] = signal("");
-        // console.log("look how this log only runs once for each item", todoSignal());
+        console.log(
+          "look how this log only runs once for each item",
+          todoSignal()
+        );
 
         return Div(
           props({
@@ -40,17 +43,11 @@
               todoSignal().done && "bg-red-100",
             ]),
           }),
-          Input(
-            props({
-              value: text,
-              oninput: (e) => setText(e.target.value),
-            })
-          ),
           Div(
             props({
               className: cn(() => [todoSignal().done && "line-through"]),
             }),
-            todoSignal().name
+            react(() => todoSignal().name)
           ),
           Div(
             Button(
@@ -62,11 +59,7 @@
                   !todoSignal().done && "hover:bg-green-50 bg-green-100",
                 ]),
               }),
-              Show({
-                when: react(() => todoSignal().done),
-                content: "❌",
-                fallBack: "✅",
-              })
+              react(() => (todoSignal().done ? "❌" : "✅"))
             ),
             Button(
               props({
@@ -90,11 +83,17 @@
           { id: genId(), name: "2", done: true },
           { id: genId(), name: "3", done: false },
         ]);
+        const [containerRef, setContainerRef] = signal(null);
+
+        effect(() => {
+          console.log("ref", containerRef());
+        });
 
         const handleTodoToggle = (id) => {
-          setTodos(
-            todos().map((t) => {
+          setTodos((t) =>
+            t.map((t) => {
               if (t.id === id) t.done = !t.done;
+
               return t;
             })
           );
@@ -121,15 +120,13 @@
             props({
               className:
                 "flex flex-col gap-4 border p-4 bg-white rounded max-w-[600px] w-full",
+              ref: setContainerRef,
             }),
             H1(props({ className: "text-lg font-bold" }), "Todo App"),
             Hr(),
             ListView({
               data: todos,
               keyExtractor: (todo) => todo().id,
-              container: Div(
-                props({ className: "max-h-[300px] overflow-auto" })
-              ),
               render: (todo) =>
                 TodoItem({
                   todoSignal: todo,
@@ -143,7 +140,7 @@
             }),
             Hr(),
             Div(
-              props({ className: "flex gap-4" }),
+              props({ className: "flex gap-4 max-sm:flex-col" }),
               Input(
                 props({
                   placeholder: "Your next incredible task",
@@ -185,7 +182,7 @@
         );
       };
 
-      bootstrap(app, TodoApp);
+      bootstrap(document.body, TodoApp);
     </script>
   </body>
 </html>
