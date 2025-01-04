@@ -1,4 +1,6 @@
-const [currentRoute, setCurrentRoute] = signal("/");
+
+
+const [currentRoute, setCurrentRoute] = signal(window.location.pathname);
 
 const RoutesProvider = ({ routesMap = {}, fallBack }) => {
   debugger;
