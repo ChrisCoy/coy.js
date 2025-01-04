@@ -2,6 +2,21 @@
 // in the props, example: props<H1>({className: ""}); or props.h1({}) or H1.props({});
 const props = (p) => new Props(p);
 
+// TODO, trocar para um objeto proops....
+const fromArgs = (args) => {
+  const { propsObjs } = args.reduce(
+    (acc, arg) => {
+      if (arg instanceof Props) {
+        acc.propsObjs.push(arg.props);
+      }
+      return acc;
+    },
+    { propsObjs: [] }
+  );
+
+  return Object.assign({}, ...propsObjs);
+};
+
 /* prettier-ignore */
 //To avoid
 const Fn = (fn) => (...args) => fn.apply(null, args);
@@ -121,7 +136,7 @@ const Fragment = Fn((...args) => new BaseComponent("fragment", args));
 
 const Custom = Fn((tag, ...args) => new BaseComponent(tag, args));
 
-const Show = Fn(({ when, content = "", fallBack }) => {
+const Show = Fn(({ when, content, fallBack }) => {
   let lastState = null;
 
   if (isCoySignal(when)) {
@@ -160,10 +175,10 @@ const Show = Fn(({ when, content = "", fallBack }) => {
   }
 });
 
-const ShowMap = Fn(({ when, map, fallBack }) => {
+const ShowMap = Fn(({ key, map, fallBack }) => {
   return Show({
-    when: when,
-    content: () => map[when()],
+    when: key,
+    content: () => map[key()],
     fallBack: fallBack,
   });
 });

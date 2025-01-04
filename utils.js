@@ -20,24 +20,7 @@ const isStringNodeByTypeof = (type) => {
   return false;
 };
 
-const $$SignalType = Symbol("$$SignalType");
-const $$SignalGetter = Symbol("$$SignalGetter");
-const $$SignalSetter = Symbol("$$SignalSetter");
 
-const isCoySignal = (fn) => {
-  if (fn && fn[$$SignalType] === $$SignalGetter) {
-    return true;
-  }
-
-  return false;
-};
-
-function isCoyComponent(component) {
-  if (component instanceof BaseComponent) {
-    return true;
-  }
-  return false;
-}
 
 
 const cn = (...args) => {
@@ -55,10 +38,6 @@ const cn = (...args) => {
 const idGenerator = () => {
   let id = 1;
   return () => id++;
-};
-
-const signalToObject = ([getter, setter]) => {
-  return { get: getter, set: setter, id: Math.ceil(Math.random() * 100) };
 };
 
 const swipeItemsOnArray = (array, from, to) => {
@@ -85,16 +64,15 @@ function findDuplicates(arr) {
   const duplicates = new Set();
 
   for (const item of arr) {
-      if (seen.has(item)) {
-          duplicates.add(item);
-      } else {
-          seen.add(item);
-      }
+    if (seen.has(item)) {
+      duplicates.add(item);
+    } else {
+      seen.add(item);
+    }
   }
 
   return Array.from(duplicates);
 }
-
 
 function populateNodesDOM(node) {
   for (let i = 0; i < node.children.length; i++) {

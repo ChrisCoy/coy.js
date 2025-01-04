@@ -3,6 +3,10 @@ let untrack = false;
 let batching = false;
 let batchContextStack = new Set();
 
+const $$SignalType = Symbol("$$SignalType");
+const $$SignalGetter = Symbol("$$SignalGetter");
+const $$SignalSetter = Symbol("$$SignalSetter");
+
 function signal(value) {
   const subscriptions = new Set();
   let signalValue = value;
@@ -64,6 +68,11 @@ function untracked(fn) {
 
 const peek = untracked;
 
+const react = (fn) => {
+  fn[$$SignalType] = $$SignalGetter;
+  return fn;
+};
+
 function computed(fn) {
   const [getState, setState] = signal();
 
@@ -73,11 +82,6 @@ function computed(fn) {
 
   return getState;
 }
-
-const react = (fn) => {
-  fn[$$SignalType] = $$SignalGetter;
-  return fn;
-};
 
 function memo(fn) {
   const [getState, setState] = signal();
@@ -150,3 +154,15 @@ function setPropertiesAndListenToSignals(cursor, key, prop) {
     }
   }
 }
+
+const isCoySignal = (fn) => {
+  if (fn && fn[$$SignalType] === $$SignalGetter) {
+    return true;
+  }
+
+  return false;
+};
+
+const signalToObject = ([getter, setter]) => {
+  return { get: getter, set: setter, id: Math.ceil(Math.random() * 100) };
+};

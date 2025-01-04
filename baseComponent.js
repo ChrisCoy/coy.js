@@ -1,22 +1,11 @@
-// TODO: FRAGMENTS
 // TODO: better errors to show if a signal was used in the wrong way
 
-// function populateChildren(container, childrenList) {
-//   let children = [];
-//   childrenList?.forEach((c) => {
-//     const element = createElement(c);
-
-//     if (c.tag === "fragment") {
-//       populateChildren(container, c.children);
-//       return;
-//     }
-
-//     container.appendChild(element);
-//     children.push(element);
-//   });
-
-//   return children;
-// }
+function isCoyComponent(component) {
+  if (component instanceof BaseComponent) {
+    return true;
+  }
+  return false;
+}
 
 class BaseComponent {
   element;
