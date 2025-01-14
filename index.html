@@ -14,30 +14,53 @@
     <script src="./createElement.js"></script>
     <script src="./components.js"></script>
     <script src="./toast.js"></script>
-    <script src="pages/TodoPage.js"></script>
     <script src="coy-route.js"></script>
+
+    <script src="pages/TodoPage.js"></script>
+    <script src="pages/NotFound.js"></script>
 
     <script src="./bootstrap.js"></script>
 
     <script>
       const Home = () => {
+        const [random, setRandom] = signal(Math.random().toString(36));
         return Fragment(
-          ToastProviderGlobal(),
           Div(
             props({
               className: "fixed flex justify-center gap-4 p-4 text-lg",
             }),
             CoyLink("Home", props({ href: "/" })),
-            CoyLink("TodoApp", props({ href: "/todo" }))
-          ),
-          RoutesProvider({
-            fallBack: Div(
-              "Not Found :(",
+            CoyLink("TodoApp", props({ href: "/todo" })),
+            CoyLink(
+              "NotFound",
               props({
-                className:
-                  "-z-10 fixed inset-0 grid w-screen h-screen place-items-center",
+                href: random,
+                onclick: () => setRandom(Math.random().toString(36)),
               })
-            ),
+            )
+          ),
+
+          /**
+           * [{
+           *    path: "/",
+           *    guards: [AuthGuard()],
+           *    component: (children) => Div(children),
+           *    children: [
+           *      {
+           *        path: "/",
+           *        guards: [SubRoutGuard()],
+           *        component: (children) => Div(),
+           *      },
+           *      {
+           *        path: "/another",
+           *        component: (children) => Div()
+           *      }
+           *    ]
+           * }]
+           */
+
+          RoutesProvider({
+            fallBack: () => NotFound,
             routesMap: {
               "/": Div(
                 "PRA ONDE VAMOS?",
@@ -46,7 +69,7 @@
                     "-z-10 fixed inset-0 grid w-screen h-screen place-items-center",
                 })
               ),
-              "/todo": TodoApp(),
+              "/todo": () => TodoApp(),
             },
           })
         );

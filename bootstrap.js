@@ -1,5 +1,4 @@
 function bootstrap(root, component) {
-  debugger;
   if (!root || !(root instanceof Element)) {
     throw new Error("Root must be a reference dom a DOM node");
   }
@@ -14,5 +13,4 @@ function bootstrap(root, component) {
   console.log(tree);
 
   populateNodesDOM(tree);
-  // rootComponent.appendChild(element);
 }

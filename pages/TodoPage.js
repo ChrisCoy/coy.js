@@ -5,6 +5,7 @@ const Layout = (child) => {
     props({
       className: "min-h-screen w-full grid place-items-center bg-zinc-100 p-4",
     }),
+    ToastProviderGlobal(),
     child
   );
 };

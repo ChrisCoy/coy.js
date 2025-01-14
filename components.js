@@ -17,126 +17,122 @@ const fromArgs = (args) => {
   return Object.assign({}, ...propsObjs);
 };
 
-/* prettier-ignore */
-//To avoid
-const Fn = (fn) => (...args) => fn.apply(null, args);
+const H1 = (...args) => new BaseComponent("h1", args);
+const H2 = (...args) => new BaseComponent("h2", args);
+const H3 = (...args) => new BaseComponent("h3", args);
+const H4 = (...args) => new BaseComponent("h4", args);
+const H5 = (...args) => new BaseComponent("h5", args);
+const H6 = (...args) => new BaseComponent("h6", args);
+const Hr = (...args) => new BaseComponent("hr", args);
+const Br = (...args) => new BaseComponent("br", args);
+const Div = (...args) => new BaseComponent("div", args);
+const Button = (...args) => new BaseComponent("button", args);
+const Input = (...args) => new BaseComponent("input", args);
+const A = (...args) => new BaseComponent("a", args);
+const Abbr = (...args) => new BaseComponent("abbr", args);
+const Address = (...args) => new BaseComponent("address", args);
+const Area = (...args) => new BaseComponent("area", args);
+const Article = (...args) => new BaseComponent("article", args);
+const Aside = (...args) => new BaseComponent("aside", args);
+const Audio = (...args) => new BaseComponent("audio", args);
+const B = (...args) => new BaseComponent("b", args);
+const Base = (...args) => new BaseComponent("base", args);
+const Bdi = (...args) => new BaseComponent("bdi", args);
+const Bdo = (...args) => new BaseComponent("bdo", args);
+const Blockquote = (...args) => new BaseComponent("blockquote", args);
+// const Body = (...args) => new BaseComponent("body", args);
+const Canvas = (...args) => new BaseComponent("canvas", args);
+const Caption = (...args) => new BaseComponent("caption", args);
+const Cite = (...args) => new BaseComponent("cite", args);
+const Code = (...args) => new BaseComponent("code", args);
+const Col = (...args) => new BaseComponent("col", args);
+const Colgroup = (...args) => new BaseComponent("colgroup", args);
+const Data = (...args) => new BaseComponent("data", args);
+const Datalist = (...args) => new BaseComponent("datalist", args);
+const Dd = (...args) => new BaseComponent("dd", args);
+const Del = (...args) => new BaseComponent("del", args);
+const Details = (...args) => new BaseComponent("details", args);
+const Dfn = (...args) => new BaseComponent("dfn", args);
+const Dialog = (...args) => new BaseComponent("dialog", args);
+const Dl = (...args) => new BaseComponent("dl", args);
+const Dt = (...args) => new BaseComponent("dt", args);
+const Em = (...args) => new BaseComponent("em", args);
+const Embed = (...args) => new BaseComponent("embed", args);
+const Fieldset = (...args) => new BaseComponent("fieldset", args);
+const Figcaption = (...args) => new BaseComponent("figcaption", args);
+const Figure = (...args) => new BaseComponent("figure", args);
+const Footer = (...args) => new BaseComponent("footer", args);
+const Form = (...args) => new BaseComponent("form", args);
+const H = (...args) => new BaseComponent("h", args);
+// const Head = (...args) => new BaseComponent("head", args);
+const Header = (...args) => new BaseComponent("header", args);
+const Hgroup = (...args) => new BaseComponent("hgroup", args);
+const I = (...args) => new BaseComponent("i", args);
+const Iframe = (...args) => new BaseComponent("iframe", args);
+const Img = (...args) => new BaseComponent("img", args);
+const Ins = (...args) => new BaseComponent("ins", args);
+const Kbd = (...args) => new BaseComponent("kbd", args);
+const Label = (...args) => new BaseComponent("label", args);
+const Legend = (...args) => new BaseComponent("legend", args);
+const Li = (...args) => new BaseComponent("li", args);
+const Link = (...args) => new BaseComponent("link", args);
+const Main = (...args) => new BaseComponent("main", args);
+const MapElement = (...args) => new BaseComponent("map", args);
+const Mark = (...args) => new BaseComponent("mark", args);
+// const Meta = (...args) => new BaseComponent("meta", args);
+const Meter = (...args) => new BaseComponent("meter", args);
+const Nav = (...args) => new BaseComponent("nav", args);
+const Noscript = (...args) => new BaseComponent("noscript", args);
+const ObjectElement = (...args) => new BaseComponent("object", args);
+const Ol = (...args) => new BaseComponent("ol", args);
+const Optgroup = (...args) => new BaseComponent("optgroup", args);
+const Option = (...args) => new BaseComponent("option", args);
+const Output = (...args) => new BaseComponent("output", args);
+const P = (...args) => new BaseComponent("p", args);
+const Param = (...args) => new BaseComponent("param", args);
+const Picture = (...args) => new BaseComponent("picture", args);
+const Pre = (...args) => new BaseComponent("pre", args);
+const Progress = (...args) => new BaseComponent("progress", args);
+const Q = (...args) => new BaseComponent("q", args);
+const Rp = (...args) => new BaseComponent("rp", args);
+const Rt = (...args) => new BaseComponent("rt", args);
+const Ruby = (...args) => new BaseComponent("ruby", args);
+const S = (...args) => new BaseComponent("s", args);
+const Samp = (...args) => new BaseComponent("samp", args);
+const Script = (...args) => new BaseComponent("script", args);
+const Section = (...args) => new BaseComponent("section", args);
+const Select = (...args) => new BaseComponent("select", args);
+const Small = (...args) => new BaseComponent("small", args);
+const Source = (...args) => new BaseComponent("source", args);
+const Span = (...args) => new BaseComponent("span", args);
+const Strong = (...args) => new BaseComponent("strong", args);
+const Style = (...args) => new BaseComponent("style", args);
+const Sub = (...args) => new BaseComponent("sub", args);
+const Summary = (...args) => new BaseComponent("summary", args);
+const Sup = (...args) => new BaseComponent("sup", args);
+const Table = (...args) => new BaseComponent("table", args);
+const Tbody = (...args) => new BaseComponent("tbody", args);
+const Td = (...args) => new BaseComponent("td", args);
+const Template = (...args) => new BaseComponent("template", args);
+const Textarea = (...args) => new BaseComponent("textarea", args);
+const Tfoot = (...args) => new BaseComponent("tfoot", args);
+const Th = (...args) => new BaseComponent("th", args);
+const Thead = (...args) => new BaseComponent("thead", args);
+const Time = (...args) => new BaseComponent("time", args);
+// const Title = (...args) => new BaseComponent("title", args);
+const Tr = (...args) => new BaseComponent("tr", args);
+const Track = (...args) => new BaseComponent("track", args);
+const U = (...args) => new BaseComponent("u", args);
+const Ul = (...args) => new BaseComponent("ul", args);
+const Var = (...args) => new BaseComponent("var", args);
+const Video = (...args) => new BaseComponent("video", args);
+const Wbr = (...args) => new BaseComponent("wbr", args);
 
-const H1 = Fn((...args) => new BaseComponent("h1", args));
-const H2 = Fn((...args) => new BaseComponent("h2", args));
-const H3 = Fn((...args) => new BaseComponent("h3", args));
-const H4 = Fn((...args) => new BaseComponent("h4", args));
-const H5 = Fn((...args) => new BaseComponent("h5", args));
-const H6 = Fn((...args) => new BaseComponent("h6", args));
-const Hr = Fn((...args) => new BaseComponent("hr", args));
-const Br = Fn((...args) => new BaseComponent("br", args));
-const Div = Fn((...args) => new BaseComponent("div", args));
-const Button = Fn((...args) => new BaseComponent("button", args));
-const Input = Fn((...args) => new BaseComponent("input", args));
-const A = Fn((...args) => new BaseComponent("a", args));
-const Abbr = Fn((...args) => new BaseComponent("abbr", args));
-const Address = Fn((...args) => new BaseComponent("address", args));
-const Area = Fn((...args) => new BaseComponent("area", args));
-const Article = Fn((...args) => new BaseComponent("article", args));
-const Aside = Fn((...args) => new BaseComponent("aside", args));
-const Audio = Fn((...args) => new BaseComponent("audio", args));
-const B = Fn((...args) => new BaseComponent("b", args));
-const Base = Fn((...args) => new BaseComponent("base", args));
-const Bdi = Fn((...args) => new BaseComponent("bdi", args));
-const Bdo = Fn((...args) => new BaseComponent("bdo", args));
-const Blockquote = Fn((...args) => new BaseComponent("blockquote", args));
-// const Body = Fn((...args) => new BaseComponent("body", args));
-const Canvas = Fn((...args) => new BaseComponent("canvas", args));
-const Caption = Fn((...args) => new BaseComponent("caption", args));
-const Cite = Fn((...args) => new BaseComponent("cite", args));
-const Code = Fn((...args) => new BaseComponent("code", args));
-const Col = Fn((...args) => new BaseComponent("col", args));
-const Colgroup = Fn((...args) => new BaseComponent("colgroup", args));
-const Data = Fn((...args) => new BaseComponent("data", args));
-const Datalist = Fn((...args) => new BaseComponent("datalist", args));
-const Dd = Fn((...args) => new BaseComponent("dd", args));
-const Del = Fn((...args) => new BaseComponent("del", args));
-const Details = Fn((...args) => new BaseComponent("details", args));
-const Dfn = Fn((...args) => new BaseComponent("dfn", args));
-const Dialog = Fn((...args) => new BaseComponent("dialog", args));
-const Dl = Fn((...args) => new BaseComponent("dl", args));
-const Dt = Fn((...args) => new BaseComponent("dt", args));
-const Em = Fn((...args) => new BaseComponent("em", args));
-const Embed = Fn((...args) => new BaseComponent("embed", args));
-const Fieldset = Fn((...args) => new BaseComponent("fieldset", args));
-const Figcaption = Fn((...args) => new BaseComponent("figcaption", args));
-const Figure = Fn((...args) => new BaseComponent("figure", args));
-const Footer = Fn((...args) => new BaseComponent("footer", args));
-const Form = Fn((...args) => new BaseComponent("form", args));
-const H = Fn((...args) => new BaseComponent("h", args));
-// const Head = Fn((...args) => new BaseComponent("head", args));
-const Header = Fn((...args) => new BaseComponent("header", args));
-const Hgroup = Fn((...args) => new BaseComponent("hgroup", args));
-const I = Fn((...args) => new BaseComponent("i", args));
-const Iframe = Fn((...args) => new BaseComponent("iframe", args));
-const Img = Fn((...args) => new BaseComponent("img", args));
-const Ins = Fn((...args) => new BaseComponent("ins", args));
-const Kbd = Fn((...args) => new BaseComponent("kbd", args));
-const Label = Fn((...args) => new BaseComponent("label", args));
-const Legend = Fn((...args) => new BaseComponent("legend", args));
-const Li = Fn((...args) => new BaseComponent("li", args));
-const Link = Fn((...args) => new BaseComponent("link", args));
-const Main = Fn((...args) => new BaseComponent("main", args));
-const MapElement = Fn((...args) => new BaseComponent("map", args));
-const Mark = Fn((...args) => new BaseComponent("mark", args));
-// const Meta = Fn((...args) => new BaseComponent("meta", args));
-const Meter = Fn((...args) => new BaseComponent("meter", args));
-const Nav = Fn((...args) => new BaseComponent("nav", args));
-const Noscript = Fn((...args) => new BaseComponent("noscript", args));
-const ObjectElement = Fn((...args) => new BaseComponent("object", args));
-const Ol = Fn((...args) => new BaseComponent("ol", args));
-const Optgroup = Fn((...args) => new BaseComponent("optgroup", args));
-const Option = Fn((...args) => new BaseComponent("option", args));
-const Output = Fn((...args) => new BaseComponent("output", args));
-const P = Fn((...args) => new BaseComponent("p", args));
-const Param = Fn((...args) => new BaseComponent("param", args));
-const Picture = Fn((...args) => new BaseComponent("picture", args));
-const Pre = Fn((...args) => new BaseComponent("pre", args));
-const Progress = Fn((...args) => new BaseComponent("progress", args));
-const Q = Fn((...args) => new BaseComponent("q", args));
-const Rp = Fn((...args) => new BaseComponent("rp", args));
-const Rt = Fn((...args) => new BaseComponent("rt", args));
-const Ruby = Fn((...args) => new BaseComponent("ruby", args));
-const S = Fn((...args) => new BaseComponent("s", args));
-const Samp = Fn((...args) => new BaseComponent("samp", args));
-const Script = Fn((...args) => new BaseComponent("script", args));
-const Section = Fn((...args) => new BaseComponent("section", args));
-const Select = Fn((...args) => new BaseComponent("select", args));
-const Small = Fn((...args) => new BaseComponent("small", args));
-const Source = Fn((...args) => new BaseComponent("source", args));
-const Span = Fn((...args) => new BaseComponent("span", args));
-const Strong = Fn((...args) => new BaseComponent("strong", args));
-const Style = Fn((...args) => new BaseComponent("style", args));
-const Sub = Fn((...args) => new BaseComponent("sub", args));
-const Summary = Fn((...args) => new BaseComponent("summary", args));
-const Sup = Fn((...args) => new BaseComponent("sup", args));
-const Table = Fn((...args) => new BaseComponent("table", args));
-const Tbody = Fn((...args) => new BaseComponent("tbody", args));
-const Td = Fn((...args) => new BaseComponent("td", args));
-const Template = Fn((...args) => new BaseComponent("template", args));
-const Textarea = Fn((...args) => new BaseComponent("textarea", args));
-const Tfoot = Fn((...args) => new BaseComponent("tfoot", args));
-const Th = Fn((...args) => new BaseComponent("th", args));
-const Thead = Fn((...args) => new BaseComponent("thead", args));
-const Time = Fn((...args) => new BaseComponent("time", args));
-// const Title = Fn((...args) => new BaseComponent("title", args));
-const Tr = Fn((...args) => new BaseComponent("tr", args));
-const Track = Fn((...args) => new BaseComponent("track", args));
-const U = Fn((...args) => new BaseComponent("u", args));
-const Ul = Fn((...args) => new BaseComponent("ul", args));
-const Var = Fn((...args) => new BaseComponent("var", args));
-const Video = Fn((...args) => new BaseComponent("video", args));
-const Wbr = Fn((...args) => new BaseComponent("wbr", args));
+const Fragment = (...args) => new BaseComponent("fragment", args);
 
-const Fragment = Fn((...args) => new BaseComponent("fragment", args));
+const CustomComponent = (tag, ...args) => new BaseComponent(tag, args);
 
-const Custom = Fn((tag, ...args) => new BaseComponent(tag, args));
-
-const Show = Fn(({ when, content, fallBack }) => {
+const Show = ({ when, content, fallBack }) => {
   let lastState = null;
 
   if (isCoySignal(when)) {
@@ -150,7 +146,18 @@ const Show = Fn(({ when, content, fallBack }) => {
           mustShowContent === null ||
           mustShowContent === undefined;
 
-        const component = createElement(isFallBack ? fallBack : content);
+        let component;
+
+        if (!isFallBack && content) {
+          component = createElement(content);
+        } else {
+          component = createElement(fallBack);
+        }
+
+        // if(component.tag === "void" && fallBack) {
+        //   component = createElement(fallBack)
+        // }
+
         container.removeAllChildren();
 
         container.appendChild(component);
@@ -160,11 +167,6 @@ const Show = Fn(({ when, content, fallBack }) => {
 
         populateNodesDOM(component);
 
-        // if (component) {
-        //   fragment.replaceChildren(component);
-        // } else {
-        //   fragment.replaceChildren();
-        // }
         lastState = mustShowContent;
       }
     });
@@ -173,17 +175,45 @@ const Show = Fn(({ when, content, fallBack }) => {
   } else {
     return !!when ? content : fallBack;
   }
-});
+};
 
-const ShowMap = Fn(({ key, map, fallBack }) => {
+const ShowSignalComponent = (component) => {
+  if (!isCoySignal(component)) {
+    throw new Error("Component must be a signal that returns a component!");
+  }
+  const memoizedComponent = memo(() => {
+    const el = component();
+
+    if(!isCoyComponent(el)){
+      throw new Error("Result from signal must be a coy component!");
+    }
+
+    return el;
+  });
+
+  const container = new BaseComponent("fragment");
+
+  effect(() => {
+    container.removeAllChildren();
+    const resultComponent = memoizedComponent();
+    container.appendChild(resultComponent);
+    container.children.push(resultComponent);
+
+    resultComponent.parent = container.parent;
+
+    populateNodesDOM(resultComponent);
+  });
+};
+
+const ShowMap = ({ key, map, fallBack }) => {
   return Show({
     when: key,
-    content: () => map[key()],
+    content: () => map[key()] || fallBack,
     fallBack: fallBack,
   });
-});
+};
 
-const List = Fn(({ data = [], render = (d) => d, keyExtractor, container }) => {
+const List = ({ data = [], render = (d) => d, keyExtractor, container }) => {
   if (!Array.isArray(data) ^ isCoySignal(data)) {
     throw new Error(
       "Data property on List must be an array or a signal that returns an Array"
@@ -290,9 +320,9 @@ const List = Fn(({ data = [], render = (d) => d, keyExtractor, container }) => {
   }
 
   return container;
-});
+};
 
-const ListView = Fn(({ data, render, keyExtractor, container, empty }) => {
+const ListView = ({ data, render, keyExtractor, empty }) => {
   return Show({
     when: react(() => data().length > 0),
     content: List({
@@ -302,4 +332,4 @@ const ListView = Fn(({ data, render, keyExtractor, container, empty }) => {
     }),
     fallBack: empty,
   });
-});
+};

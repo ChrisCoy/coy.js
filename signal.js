@@ -106,6 +106,10 @@ function memo(fn) {
           break;
         }
       }
+
+      if(hasChanges){
+        setState(result);
+      }
     } else if (result !== oldState) {
       setState(result);
     }

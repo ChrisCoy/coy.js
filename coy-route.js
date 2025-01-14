@@ -3,7 +3,6 @@
 const [currentRoute, setCurrentRoute] = signal(window.location.pathname);
 
 const RoutesProvider = ({ routesMap = {}, fallBack }) => {
-  debugger;
   return ShowMap({
     key: currentRoute,
     map: routesMap,
@@ -11,18 +10,16 @@ const RoutesProvider = ({ routesMap = {}, fallBack }) => {
   });
 };
 
-const CoyLink = Fn((...args) => {
+const CoyLink = (...args) => {
   const {href, ...pp} = fromArgs(args);
 
   const onclick = (e) => {
-    e.preventDefault(); // Prevent the default link navigation
+    e.preventDefault();
 
     console.log("lol", e.href);
 
-    // Update the browser's history
     window.history.pushState({}, "", href);
 
-    // Update the current route
     setCurrentRoute(href);
   };
 
@@ -33,4 +30,4 @@ const CoyLink = Fn((...args) => {
       onclick,
     })
   );
-});
+};
