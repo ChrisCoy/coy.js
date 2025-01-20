@@ -30,7 +30,7 @@
               className: "fixed flex justify-center gap-4 p-4 text-lg",
             }),
             CoyLink("Home", props({ href: "/" })),
-            CoyLink("TodoApp", props({ href: "/todo" })),
+            CoyLink("TodoApp", props({ href: "todo/algomais/lol" })),
             CoyLink(
               "NotFound",
               props({
@@ -40,40 +40,35 @@
             )
           ),
 
-          /**
-           * [{
-           *    path: "/",
-           *    guards: [AuthGuard()],
-           *    component: (children) => Div(children),
-           *    children: [
-           *      {
-           *        path: "/",
-           *        guards: [SubRoutGuard()],
-           *        component: (children) => Div(),
-           *      },
-           *      {
-           *        path: "/another",
-           *        component: (children) => Div()
-           *      }
-           *    ]
-           * }]
-           */
-
-          RoutesProvider({
-            fallBack: () => NotFound,
-            routesMap: {
-              "/": Div(
-                "PRA ONDE VAMOS?",
-                props({
-                  className:
-                    "-z-10 fixed inset-0 grid w-screen h-screen place-items-center",
-                })
-              ),
-              "/todo": () => TodoApp(),
+          RoutesProvider([
+            {
+              path: "/",
+              component: ({ outlet }) =>
+                Div(props({ id: "qualquer" }), "Textoqualquer", outlet),
+              children: [{ path: "/", component: TodoApp }],
             },
-          })
+            // {
+            //   path: "todo",
+            //   component: ({ outlet }) =>
+            //     Div(props({ id: "qualquer" }), "outrotextoqualquer", outlet),
+            //   children: [{path: "/", component: TodoApp}]
+            // },
+          ])
         );
       };
+
+      // const Home = () => {
+      //   const [comp, setComp] = signal(Div("Teste"));
+      //   const [bool, setBool] = signal(false);
+      //   const Comp = memo(() => bool() ? Div("Yes Please!") : Div("Hell Nah"));
+
+      //   setInterval(() => {
+      //     setBool((old) => !old)
+      //   }, 3000);
+
+      //   // return Div("Teste")
+      //   return ShowSignalComponent(Comp);
+      // }
 
       bootstrap(app, Home);
     </script>

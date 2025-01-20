@@ -5,7 +5,7 @@ const NotFound = () => {
     Div("Page ", B(route), " not found"),
     props({
       className:
-        "-z-10 fixed inset-0 grid w-screen h-screen place-items-center",
+        "-z-10 text-lg fixed inset-0 grid w-screen h-screen place-items-center",
     })
   );
 };

@@ -181,21 +181,21 @@ const ShowSignalComponent = (component) => {
   if (!isCoySignal(component)) {
     throw new Error("Component must be a signal that returns a component!");
   }
-  const memoizedComponent = memo(() => {
-    const el = component();
+  // const memoizedComponent = memo(() => {
+  //   const el = component();
 
-    if(!isCoyComponent(el)){
-      throw new Error("Result from signal must be a coy component!");
-    }
+  //   if(!isCoyComponent(el)){
+  //     throw new Error("Result from signal must be a coy component!");
+  //   }
 
-    return el;
-  });
+  //   return el;
+  // });
 
   const container = new BaseComponent("fragment");
 
   effect(() => {
     container.removeAllChildren();
-    const resultComponent = memoizedComponent();
+    const resultComponent = component();
     container.appendChild(resultComponent);
     container.children.push(resultComponent);
 
@@ -203,6 +203,8 @@ const ShowSignalComponent = (component) => {
 
     populateNodesDOM(resultComponent);
   });
+
+  return container;
 };
 
 const ShowMap = ({ key, map, fallBack }) => {

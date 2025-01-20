@@ -39,7 +39,9 @@ function signal(value) {
       return;
     }
 
-    runSubs();
+    if (!untrack) {
+      runSubs();
+    }
   };
   setState[$$SignalType] = "$$SignalSetter";
 
@@ -60,13 +62,18 @@ function effectOnDependencies(fn, deps = []) {
 
 function untracked(fn) {
   untrack = true;
+  fn();
+  untrack = false;
+}
+
+function peek(fn) {
+  untrack = true;
   const result = fn();
   untrack = false;
 
   return result;
 }
 
-const peek = untracked;
 
 const react = (fn) => {
   fn[$$SignalType] = $$SignalGetter;
@@ -88,7 +95,7 @@ function memo(fn) {
 
   effect(() => {
     const result = fn();
-    const oldState = getState();
+    const oldState = peek(getState);
 
     if (
       Array.isArray(result) &&
@@ -107,7 +114,7 @@ function memo(fn) {
         }
       }
 
-      if(hasChanges){
+      if (hasChanges) {
         setState(result);
       }
     } else if (result !== oldState) {
