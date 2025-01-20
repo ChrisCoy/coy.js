@@ -8,18 +8,18 @@
   <body>
     <div id="app"></div>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="./utils.js"></script>
-    <script src="./signal.js"></script>
-    <script src="./baseComponent.js"></script>
-    <script src="./createElement.js"></script>
-    <script src="./components.js"></script>
-    <script src="./toast.js"></script>
-    <script src="coy-route.js"></script>
+    <script src="/utils.js"></script>
+    <script src="/signal.js"></script>
+    <script src="/baseComponent.js"></script>
+    <script src="/createElement.js"></script>
+    <script src="/components.js"></script>
+    <script src="/toast.js"></script>
+    <script src="/coy-route.js"></script>
 
-    <script src="pages/TodoPage.js"></script>
-    <script src="pages/NotFound.js"></script>
+    <script src="/pages/TodoPage.js"></script>
+    <script src="/pages/NotFound.js"></script>
 
-    <script src="./bootstrap.js"></script>
+    <script src="/bootstrap.js"></script>
 
     <script>
       const Home = () => {
@@ -30,7 +30,7 @@
               className: "fixed flex justify-center gap-4 p-4 text-lg",
             }),
             CoyLink("Home", props({ href: "/" })),
-            CoyLink("TodoApp", props({ href: "todo/algomais/lol" })),
+            CoyLink("TodoApp", props({ href: "/todo" })),
             CoyLink(
               "NotFound",
               props({
@@ -47,28 +47,15 @@
                 Div(props({ id: "qualquer" }), "Textoqualquer", outlet),
               children: [{ path: "/", component: TodoApp }],
             },
-            // {
-            //   path: "todo",
-            //   component: ({ outlet }) =>
-            //     Div(props({ id: "qualquer" }), "outrotextoqualquer", outlet),
-            //   children: [{path: "/", component: TodoApp}]
-            // },
+            {
+              path: "todo",
+              component: ({ outlet }) =>
+                Div(props({ id: "qualquer" }), "outrotextoqualquer", outlet),
+              children: [{ path: "/", component: TodoApp }],
+            },
           ])
         );
       };
-
-      // const Home = () => {
-      //   const [comp, setComp] = signal(Div("Teste"));
-      //   const [bool, setBool] = signal(false);
-      //   const Comp = memo(() => bool() ? Div("Yes Please!") : Div("Hell Nah"));
-
-      //   setInterval(() => {
-      //     setBool((old) => !old)
-      //   }, 3000);
-
-      //   // return Div("Teste")
-      //   return ShowSignalComponent(Comp);
-      // }
 
       bootstrap(app, Home);
     </script>
