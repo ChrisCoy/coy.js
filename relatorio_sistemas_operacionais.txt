@@ -1,0 +1,317 @@
+📋 **Relatório de Correção - Sistemas Operacionais - Sergio Souza da Silva**
+
+Nota final: 20.0 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ✅ Resposta correta (b)
+Questão 7: ✅ Resposta correta (c)
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ✅ Resposta correta (b)
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ✅ Resposta correta (a)
+Questão 10d: ✅ Resposta correta (b)
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Ricardo Gomes**
+
+Nota final: 13.0 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ❌ Resposta errada (c) | Correta: b
+Questão 7: ❌ Resposta errada (d) | Correta: c
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ❌ Resposta errada (a) | Correta: b
+Questão 10a: ❌ Resposta errada (a) | Correta: b
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ✅ Resposta correta (a)
+Questão 10d: ❌ Resposta errada (a) | Correta: b
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Larissa Gomes**
+
+Nota final: 12.0 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ❌ Resposta errada (c) | Correta: b
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ❌ Resposta errada (a) | Correta: b
+Questão 6: ❌ Resposta errada (a) | Correta: b
+Questão 7: ✅ Resposta correta (c)
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ❌ Resposta errada (a) | Correta: b
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ✅ Resposta correta (a)
+Questão 10d: ✅ Resposta correta (b)
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Adrielly Rodrigues Borges**
+
+Nota final: 13.0 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ❌ Resposta errada (a) | Correta: b
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ❌ Resposta errada (a) | Correta: b
+Questão 7: ✅ Resposta correta (c)
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ❌ Resposta errada (a) | Correta: b
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ❌ Resposta errada (c) | Correta: a
+Questão 10d: ❌ Resposta errada (a) | Correta: b
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Luiza G. Rosa**
+
+Nota final: 18.0 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ✅ Resposta correta (b)
+Questão 7: ❌ Resposta errada (d) | Correta: c
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ✅ Resposta correta (b)
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ✅ Resposta correta (a)
+Questão 10d: ✅ Resposta correta (b)
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Sândalo Cesar Maciel Silva**
+
+Nota final: 14.0 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ❌ Resposta errada (a) | Correta: b
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ❌ Resposta errada (c) | Correta: b
+Questão 7: ❌ Resposta errada (a) | Correta: c
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ✅ Resposta correta (b)
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ✅ Resposta correta (a)
+Questão 10d: ✅ Resposta correta (b)
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Pedro Otávio**
+
+Nota final: 15.5 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ❌ Resposta errada (c) | Correta: b
+Questão 7: ❌ Resposta errada (d) | Correta: c
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ✅ Resposta correta (b)
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ✅ Resposta correta (a)
+Questão 10d: ❌ Resposta errada (d) | Correta: b
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Vitor Euzebio da Silva**
+
+Nota final: 17.0 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ❌ Resposta errada (a) | Correta: b
+Questão 7: ✅ Resposta correta (c)
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ✅ Resposta correta (b)
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ❌ Resposta errada (c) | Correta: a
+Questão 10d: ❌ Resposta errada (d) | Correta: b
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Alex Tavares Fernandes**
+
+Nota final: 15.0 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ✅ Resposta correta (b)
+Questão 7: ❌ Resposta errada (d) | Correta: c
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ❌ Resposta errada (a) | Correta: b
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ❌ Resposta errada (a) | Correta: b
+Questão 10c: ❌ Resposta errada (c) | Correta: a
+Questão 10d: ✅ Resposta correta (b)
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - EMERSON AURELIO ANSELMO JUNIOR**
+
+Nota final: 15.0 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ❌ Resposta errada (c) | Correta: b
+Questão 7: ❌ Resposta errada (d) | Correta: c
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ✅ Resposta correta (b)
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ❌ Resposta errada (b) | Correta: a
+Questão 10d: ❌ Resposta errada (a) | Correta: b
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Luiz Felipe Gonçalves**
+
+Nota final: 20.0 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ✅ Resposta correta (b)
+Questão 7: ✅ Resposta correta (c)
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ✅ Resposta correta (b)
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ✅ Resposta correta (a)
+Questão 10d: ✅ Resposta correta (b)
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Caliu Eduardo**
+
+Nota final: 12.0 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ❌ Resposta errada (a) | Correta: b
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ❌ Resposta errada (a) | Correta: b
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ✅ Resposta correta (b)
+Questão 7: ❌ Resposta errada (a) | Correta: c
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ❌ Resposta errada (a) | Correta: b
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ✅ Resposta correta (a)
+Questão 10d: ✅ Resposta correta (b)
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Icaro Correia Dutra**
+
+Nota final: 19.5 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ✅ Resposta correta (b)
+Questão 7: ✅ Resposta correta (c)
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ✅ Resposta correta (b)
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ❌ Resposta errada (c) | Correta: a
+Questão 10d: ✅ Resposta correta (b)
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Wytallo**
+
+Nota final: 16.5 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ✅ Resposta correta (b)
+Questão 7: ❌ Resposta errada (d) | Correta: c
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ✅ Resposta correta (b)
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ❌ Resposta errada (c) | Correta: b
+Questão 10c: ❌ Resposta errada (c) | Correta: a
+Questão 10d: ❌ Resposta errada (a) | Correta: b
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Luma Geovana**
+
+Nota final: 19.5 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ✅ Resposta correta (b)
+Questão 7: ✅ Resposta correta (c)
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ✅ Resposta correta (b)
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ✅ Resposta correta (b)
+Questão 10c: ✅ Resposta correta (a)
+Questão 10d: ❌ Resposta errada (a) | Correta: b
+
+---
+
+📋 **Relatório de Correção - Sistemas Operacionais - Gabriel Araujo**
+
+Nota final: 18.5 / 20 pontos
+
+Questão 1: ✅ Resposta correta (a)
+Questão 2: ✅ Resposta correta (b)
+Questão 3: ✅ Resposta correta (b)
+Questão 4: ✅ Resposta correta (b)
+Questão 5: ✅ Resposta correta (b)
+Questão 6: ✅ Resposta correta (b)
+Questão 7: ✅ Resposta correta (c)
+Questão 8: ✅ Resposta correta (b)
+Questão 9: ✅ Resposta correta (b)
+Questão 10a: ✅ Resposta correta (b)
+Questão 10b: ❌ Resposta errada (a) | Correta: b
+Questão 10c: ❌ Resposta errada (c) | Correta: a
+Questão 10d: ❌ Resposta errada (a) | Correta: b

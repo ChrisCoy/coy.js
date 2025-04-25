@@ -1,0 +1,77 @@
+Sergio Souza da Silva
+a,b,b,b,b,b,c,b,b,b,b,a,b
+
+
+Ricardo Gomes
+a,b,b,b,b,c,d,b,a,a,b,a,a
+
+
+
+Larissa Gomes
+a,c,b,b,a,a,c,b,a,b,b,a,b
+
+
+
+Adrielly Rodrigues Borges
+a,a,b,b,b,a,c,b,a,b,b,c,a
+
+
+
+Luiza G. Rosa
+a,b,b,b,b,b,d,b,b,b,b,a,b
+
+
+
+Sândalo Cesar Maciel Silva
+a,a,b,b,b,c,a,b,b,b,b,a,b
+
+
+
+Pedro Otávio
+a,b,b,b,b,c,d,b,b,b,b,a,d
+
+
+
+Vitor Euzebio da Silva
+a,b,b,b,b,a,c,b,b,b,b,c,d
+
+
+
+Alex Tavares Fernandes
+a,b,b,b,b,b,d,b,a,b,a,c,b
+
+
+
+EMERSON AURELIO ANSELMO JUNIOR
+a,b,b,b,b,c,d,b,b,b,b,b,a
+
+
+
+Luiz Felipe Gonçalves
+a,b,b,b,b,b,c,b,b,b,b,a,b
+
+
+
+Caliu Eduardo
+a,a,b,a,b,b,a,b,a,b,b,a,b
+
+
+
+Icaro Correia Dutra
+a,b,b,b,b,b,c,b,b,b,b,c,b
+
+
+
+Wytallo
+a,b,b,b,b,b,d,b,b,b,c,c,a
+
+
+
+Luma Geovana
+a,b,b,b,b,b,c,b,b,b,b,a,a
+
+
+
+
+Gabriel Araujo
+a,b,b,b,b,b,c,b,b,b,a,c,a
