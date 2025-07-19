@@ -1,3 +1,11 @@
+// não permitir que componentes como lista e show recebam um parametro de container,
+// isso so dificulta o raciocinio na hora de criar.
+
+
+por que por exemplo, o problema atual que temos é que precisamos saber o pai de um determinado 
+componente na hora de cria-lo, mas se usarmos um container de antemao, saberemos quem eh o pai do container,
+por que ele foi previamente colocado na arvore
+
 function signal(value) {
     const handler = {
         apply(target, thisArg, args) {

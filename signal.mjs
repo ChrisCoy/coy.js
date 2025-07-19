@@ -1,3 +1,5 @@
+import { isStringNodeByTypeof } from "./utils.mjs";
+
 let context = null;
 let untrack = false;
 let batching = false;
@@ -7,7 +9,7 @@ const $$SignalType = Symbol("$$SignalType");
 const $$SignalGetter = Symbol("$$SignalGetter");
 const $$SignalSetter = Symbol("$$SignalSetter");
 
-function signal(value) {
+export function signal(value) {
   const subscriptions = new Set();
   let signalValue = value;
 
@@ -48,25 +50,25 @@ function signal(value) {
   return [getState, setState];
 }
 
-function effect(fn) {
+export function effect(fn) {
   context = { fn };
   fn();
   context = null;
 }
 
-function effectOnDependencies(fn, deps = []) {
+export function effectOnDependencies(fn, deps = []) {
   context = { fn, dependencies: deps };
   fn();
   context = null;
 }
 
-function untracked(fn) {
+export function untracked(fn) {
   untrack = true;
   fn();
   untrack = false;
 }
 
-function peek(fn) {
+export function peek(fn) {
   untrack = true;
   const result = fn();
   untrack = false;
@@ -74,13 +76,12 @@ function peek(fn) {
   return result;
 }
 
-
-const react = (fn) => {
+export const react = (fn) => {
   fn[$$SignalType] = $$SignalGetter;
   return fn;
 };
 
-function computed(fn) {
+export function computed(fn) {
   const [getState, setState] = signal();
 
   effect(() => {
@@ -90,7 +91,7 @@ function computed(fn) {
   return getState;
 }
 
-function memo(fn) {
+export function memo(fn) {
   const [getState, setState] = signal();
 
   effect(() => {
@@ -125,7 +126,7 @@ function memo(fn) {
   return getState;
 }
 
-function batch(fn) {
+export function batch(fn) {
   batching = true;
   fn();
   batchContextStack.forEach((runSubs) => runSubs());
@@ -133,7 +134,7 @@ function batch(fn) {
   batching = false;
 }
 
-function setPropertiesAndListenToSignals(cursor, key, prop) {
+export function setPropertiesAndListenToSignals(cursor, key, prop) {
   const typeofProp = typeof prop;
 
   if (isStringNodeByTypeof(typeofProp)) {
@@ -166,7 +167,7 @@ function setPropertiesAndListenToSignals(cursor, key, prop) {
   }
 }
 
-const isCoySignal = (fn) => {
+export const isCoySignal = (fn) => {
   if (fn && fn[$$SignalType] === $$SignalGetter) {
     return true;
   }
@@ -174,6 +175,6 @@ const isCoySignal = (fn) => {
   return false;
 };
 
-const signalToObject = ([getter, setter]) => {
-  return { get: getter, set: setter, id: Math.ceil(Math.random() * 100) };
+export const signalToObject = ([getter, setter]) => {
+  return { get: getter, set: setter };
 };
