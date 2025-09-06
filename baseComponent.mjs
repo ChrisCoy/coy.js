@@ -61,8 +61,8 @@ export class BaseComponent {
   renderChildren() {
     for (let i = 0; i < this.children.length; i++) {
       const element = this.children[i];
-      
-      if(this.tag === "fragment"){
+
+      if (this.tag === "fragment") {
         element.parent = this.parent;
         this.appendChild(element, false);
       } else {
@@ -70,8 +70,7 @@ export class BaseComponent {
         this.appendChild(element, false);
       }
 
-
-      if(element.tag !== "text"){
+      if (element.tag !== "text") {
         element.renderChildren();
       }
     }
@@ -90,11 +89,13 @@ export class BaseComponent {
         this.element = document.createTextNode("");
         break;
       case "fragment":
-        this.element = document.createComment("Coy.Fragment");
+        this.element = document.createComment(
+          `Coy.${this.props.name ?? "Fragment"}`
+        );
         break;
-      // case "comment":
-      //   this.element = document.createComment(this.props.text);
-      //   break;
+      case "comment":
+        this.element = document.createComment(this.props.text);
+        break;
       case "reference":
         const { DOMNode, ...componentProps } = this.props;
 
@@ -187,15 +188,15 @@ export class BaseComponent {
   appendChild(toAppend, addToList = true) {
     toAppend = this.#createElement(toAppend);
 
-    if(addToList){
+    if (addToList) {
       this.children.push(toAppend);
     }
 
-    if(this.tag === "fragment") {
-      if(this.parent && this.parent.element.contains(this.element)){
+    if (this.tag === "fragment") {
+      if (this.parent && this.parent.element.contains(this.element)) {
         this.parent.element.insertBefore(toAppend.element, this.element);
       }
-    }else {
+    } else {
       this.element.appendChild(toAppend.element);
     }
 

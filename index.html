@@ -13,94 +13,96 @@
       import { Counter } from "/pages/Counter.mjs";
       import { bootstrap } from "/bootstrap.mjs";
       import { FragmentTest } from "/pages/Fragment.mjs";
-      // const Home = () => {
-      //   const [random, setRandom] = signal(Math.random().toString(36));
-      //   return Fragment(
-      //     Div(
-      //       props({
-      //         className: "fixed flex justify-center gap-4 p-4 text-lg",
-      //       }),
-      //       RouteLink("/home", props({ href: "/home" })),
-      //       RouteLink("/home/inside", props({ href: "/home/inside" })),
-      //       RouteLink(
-      //         "NotFound",
-      //         props({
-      //           href: random,
-      //           onclick: () => setRandom(Math.random().toString(36)),
-      //         })
-      //       )
-      //     ),
+      import {signal, react} from "/signal.mjs"
+      import {Show, List, Div, Fragment, props} from "/components.mjs"
+      import {RouteLink, RoutesProvider, RouteOutlet} from "/coy-route.mjs"
 
-      //     // so basicaly we will
-      //     RoutesProvider([
-      //       {
-      //         path: "",
-      //         component: () => Div("aqui"),
-      //       },
-      //       {
-      //         path: "home",
-      //         component: () => {
-      //           const [text, setText] = signal("");
+      const Home = () => {
+        const [random, setRandom] = signal(Math.random().toString(36));
+        
+        return Fragment(
+          Div(
+            props({
+              className: "flex gap-4 p-4 text-lg",
+            }),
+            RouteLink("/home", props({ href: "/home" })),
+            RouteLink("/home/inside", props({ href: "/home/inside" })),
+            RouteLink(
+              "NotFound",
+              props({
+                href: random,
+                onclick: () => setRandom(Math.random().toString(36)),
+              })
+            )
+          ),
 
-      //           setInterval(() => {
-      //             setText(Math.random().toString(36));
-      //           }, 4000);
+          // so basicaly we will
+          RoutesProvider([
+            // {
+            //   path: "/",
+            //   component: () => Div("aqui"),
+            // },
+            {
+              path: "home",
+              component: () => {
+                const [text, setText] = signal(Math.random().toString(36));
 
-      //           return Div(props({ id: "qualquer" }), text, RouteOutlet());
-      //         },
-      //         routes: [
-      //           {
-      //             path: "",
-      //             component: () => Div("/home/", RouteOutlet()),
-      //           },
-      //           {
-      //             path: "sub-route",
-      //             component: () => Div("/home/inside", RouteOutlet()),
-      //             routes: [
-      //               {
-      //                 path: "/",
-      //                 component: () => Div("sub-route/child", RouteOutlet()),
-      //               },
-      //             ],
-      //           },
-      //         ],
-      //       },
-      //     ])
-      //   );
-      // };
+                // setInterval(() => {
+                //   setText(Math.random().toString(36));
+                // }, 4000);
 
-      // const ListExample = () => {
-      //   const [list, setList] = signal([
-      //     { label: "example1" },
-      //     { label: "example2" },
-      //   ]);
+                return Div(props({ id: "qualquer" }), text, RouteOutlet());
+              },
+              routes: [
+                {
+                  path: "/",
+                  component: () => Div("/home/inside", RouteOutlet()),
+                },
+                {
+                  path: "sub-route",
+                  component: () => Div("/home/subroute", RouteOutlet()),
+                  routes: [
+                    {
+                      path: "/",
+                      component: () => Div("sub-route/child", RouteOutlet()),
+                    },
+                  ],
+                },
+              ],
+            },
+          ])
+        );
+      };
 
-      //   // return List({
-      //   //   data: [{label: "example1"}, {label: "example2"}],
-      //   //   render: (item) => Div(item.label),
-      //   //   // keyExtractor: (item) => item().label
-      //   // })
+      const ListExample = () => {
+        const [list, setList] = signal([
+          { label: "example1" },
+          { label: "example2" },
+          { label: "example3" },
+          { label: "example4" },
+          { label: "example5" },
+          { label: "example6" },
+        ]);
 
-      //   // setInterval(() => {
-      //   //   setList((old) => [...old, { label: Math.random().toString() }]);
-      //   // }, 200);
+        // setInterval(() => {
+        //   setList((old) => [...old, { label: Math.random().toString() }]);
+        // }, 200);
 
-      //   return Show({
-      //     when: react(() => true),
-      //     content: List({
-      //       data: list,
-      //       render: (item) => Div(item().label),
-      //       keyExtractor: (item) => item().label,
-      //     }),
-      //   });
-      // };
+        // setInterval(() => {
+        //   setList((old) => old.reverse());
+        // }, 2000);
 
-      // bootstrap(app, ListExample);
-      // bootstrap(app, Home);
-      // bootstrap(app, TodoPage);
+        return Show({
+          when: react(() => true),
+          content: List({
+            data: list,
+            render: (item) => Div(item().label),
+            keyExtractor: (item) => item().label,
+          }),
+        });
+      };
 
-      bootstrap(app, FragmentTest);
-      // bootstrap(app, Counter)
+      bootstrap(app, Home);
     </script>
   </body>
 </html>
