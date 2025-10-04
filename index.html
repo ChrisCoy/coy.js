@@ -20,6 +20,7 @@
         Button,
         Br,
         props,
+        Input
       } from "/components.mjs";
       import {
         RouteLink,
@@ -120,13 +121,17 @@
             return Div(
               Div(
                 props({
-                  className: "flex gap-4 p-4 text-lg [&>a:hover]:underline",
+                  className: "flex items-center gap-4 p-4 text-lg [&>a:hover]:underline",
                 }),
                 RouteLink("TodoApp", props({ href: "/todo" })),
                 RouteLink("FragmentTest", props({ href: "/fragment" })),
                 RouteLink("ListExample", props({ href: "/list" })),
                 RouteLink("NotFound", props({ href: "/not-found" })),
-                RouteLink("Counter", props({ href: "/counter" }))
+                RouteLink("Counter", props({ href: "/counter" })),
+                Input({
+                  className: "border-2 px-2 rounded",
+                  placeholder: "type something here"
+                })
               ),
 
               RouteOutlet()

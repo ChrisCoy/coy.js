@@ -73,20 +73,11 @@ export function findDuplicates(arr) {
   return Array.from(duplicates);
 }
 
-// function populateNodesDOM(baseComponentNode) {
-//   for (let i = 0; i < baseComponentNode.children.length; i++) {
-//     const component = baseComponentNode.children[i];
-
-//     if (baseComponentNode.tag === "fragment") {
-//       component.parent = baseComponentNode.parent;
-//     } else {
-//       component.parent = baseComponentNode;
-//     }
-
-//     baseComponentNode.appendChild(component, false);
-
-//     if (component.children.length > 0) {
-//       populateNodesDOM(component);
-//     }
-//   }
-// }
+export function createRandomString(length = 8) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}

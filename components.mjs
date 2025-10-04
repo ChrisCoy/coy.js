@@ -1,5 +1,4 @@
 import { BaseComponent, Props } from "./baseComponent.mjs";
-// import { createElement } from "./createElement.mjs";
 import {
   batch,
   effect,
@@ -181,36 +180,6 @@ export const Show = ({ when, content, fallBack = undefined }) => {
   } else {
     return !!when ? content : fallBack;
   }
-};
-
-export const ShowSignalComponent = (component) => {
-  if (!isCoySignal(component)) {
-    throw new Error("Component must be a signal that returns a component!");
-  }
-  // const memoizedComponent = memo(() => {
-  //   const el = component();
-
-  //   if(!isCoyComponent(el)){
-  //     throw new Error("Result from signal must be a coy component!");
-  //   }
-
-  //   return el;
-  // });
-
-  const container = new BaseComponent("fragment");
-
-  effect(() => {
-    container.removeAllChildren();
-    const resultComponent = component();
-    container.appendChild(resultComponent);
-    // container.children.push(resultComponent);
-
-    // resultComponent.parent = container.parent;
-
-    // populateNodesDOM(resultComponent);
-  });
-
-  return container;
 };
 
 export const ShowMap = ({ key, map, fallBack }) => {
