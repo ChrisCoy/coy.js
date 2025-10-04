@@ -41,8 +41,10 @@ export const useRouter = () => {
 
       const formattedUrl = formatUrl(url);
 
-      window.history.pushState({}, "", formattedUrl);
-      setCurrentRoute(formattedUrl);
+      setTimeout(() => {
+        window.history.pushState({}, "", formattedUrl);
+        setCurrentRoute(formattedUrl);
+      }, 0);
     },
   };
 };
@@ -78,8 +80,11 @@ export const RoutesProvider = (routeTree) => {
   changeUrlEventCallback();
   window.addEventListener("popstate", changeUrlEventCallback);
 
-  const getUrlPieces = (url = "") =>
-    url.split("/").map((urlPiece) => (urlPiece === "" ? "/" : urlPiece));
+  const getUrlPieces = (url = "") => {
+    if (url === "/") return ["/"];
+
+    return url.split("/").map((urlPiece) => (urlPiece === "" ? "/" : urlPiece));
+  };
 
   effectOnDependencies(() => {
     const newUrlPieces = getUrlPieces(currentRoute());

@@ -21,7 +21,12 @@
         Br,
         props,
       } from "/components.mjs";
-      import { RouteLink, RoutesProvider, RouteOutlet } from "/coy-route.mjs";
+      import {
+        RouteLink,
+        RoutesProvider,
+        RouteOutlet,
+        useRouter,
+      } from "/coy-route.mjs";
       import { TodoPage } from "/pages/TodoPage.mjs";
       import { FragmentTest } from "/pages/FragmentTest.mjs";
       import { ListExample } from "/pages/ListExample.mjs";
@@ -104,6 +109,14 @@
         {
           path: "/",
           component: () => {
+            const router = useRouter();
+
+            debugger
+            const curRoute = router.route();
+            if (router.route() === "/") {
+              router.navigate("/todo");
+            }
+
             return Div(
               Div(
                 props({
