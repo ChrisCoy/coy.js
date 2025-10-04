@@ -1,4 +1,21 @@
-const formatUrl = (url) => {
+import { BaseComponent } from "./baseComponent.mjs";
+import { A, fromArgs, props } from "./components.mjs";
+import { effectOnDependencies, signal } from "./signal.mjs";
+
+const isSameUrl = (url = "") => {
+  const urlPathname = new URL(formatUrl(url), window.location.href).pathname;
+  if (formatUrl(urlPathname) === currentRoute()) {
+    return true;
+  }
+
+  return false;
+};
+
+const formatUrl = (url = "") => {
+  if (url === "" || url === "/") {
+    return "/";
+  }
+
   let newUrl = url;
   if (newUrl.endsWith("index.html")) {
     newUrl = newUrl.replace("index.html", "");
@@ -8,20 +25,24 @@ const formatUrl = (url) => {
 
   return newUrl;
 };
+/** @type {BaseComponent} */
+let outletCtx = null;
 
 const [currentRoute, setCurrentRoute] = signal(
   formatUrl(window.location.pathname)
 );
 
-const useRouter = () => {
+export const useRouter = () => {
   return {
     route: currentRoute,
     // options: {params: string[]; query: string[], state: maybe?}
-    push: (path, options) => {
-      if (path === currentRoute()) return;
+    navigate: (url, options) => {
+      if (isSameUrl(url)) return;
 
-      window.history.pushState({}, "", path);
-      setCurrentRoute(path);
+      const formattedUrl = formatUrl(url);
+
+      window.history.pushState({}, "", formattedUrl);
+      setCurrentRoute(formattedUrl);
     },
   };
 };
@@ -44,66 +65,75 @@ const useRouter = () => {
  *    ]
  * }]
  */
+// TODO: REFACTOR THIS, IT'S A MESS
+export const RoutesProvider = (routeTree) => {
+  const container = new BaseComponent("fragment");
 
-const RoutesProvider = (routes) => {
-  const container = new BaseComponent("fragment")
-  // const componentsAlready = new Set();
-  // let stack = [];
-  // let curComponent = null;
-  // let count = 0;
-
-  let tree = routes;
-
-  console.log("routestree", routes);
+  let oldUrlPieces = [];
 
   const changeUrlEventCallback = () => {
     setCurrentRoute(formatUrl(window.location.pathname));
   };
 
-  const doTree = () => {
-    const pieces = currentRoute().split("/");
+  changeUrlEventCallback();
+  window.addEventListener("popstate", changeUrlEventCallback);
 
-    console.log(pieces);
+  const getUrlPieces = (url = "") =>
+    url.split("/").map((urlPiece) => (urlPiece === "" ? "/" : urlPiece));
 
-    console.log(
-      "tree.map((p) => p.path)",
-      tree.map((p) => p.path)
-    );
+  effectOnDependencies(() => {
+    const newUrlPieces = getUrlPieces(currentRoute());
+    let rootNode = routeTree;
+    let rootComponent = container;
 
-    let curKey = undefined;
-    for (let urlPiece of pieces) {
-      const key = tree.map((node) => node.path).find((key) => key === urlPiece);
+    for (let i = 0; i < newUrlPieces.length; i++) {
+      debugger;
+      const newUrlPiece = newUrlPieces[i];
+      const oldUrlPiece = oldUrlPieces[i];
 
-      if (key === undefined) {
+      const foundRoute = rootNode.find((r) => r.path === newUrlPiece);
+
+      if (newUrlPiece === oldUrlPiece) {
+        if (foundRoute?.outlet) {
+          rootComponent = foundRoute.outlet;
+        }
+        rootNode = foundRoute?.routes;
         continue;
       }
 
-      curKey = key;
+      if (!foundRoute) break;
+      if (foundRoute.path !== newUrlPiece) break;
+
+      rootNode = foundRoute.routes;
+
+      if (!foundRoute.component) {
+        continue;
+      } else {
+        rootComponent?.removeAllChildren();
+        rootComponent?.appendChild(foundRoute.component);
+        rootComponent?.renderChildren();
+
+        if (outletCtx) {
+          foundRoute.outlet = outletCtx;
+          rootComponent = outletCtx;
+          outletCtx = null;
+        } else {
+          rootComponent = undefined;
+        }
+      }
     }
 
-    if (curKey === undefined) {
-      throw new Error("cant found component to this route");
+    if (oldUrlPieces.length !== newUrlPieces.length) {
+      rootComponent?.removeAllChildren();
     }
 
-    const c = createElement(tree.find((node) => node.path === curKey).component)
-
-    container.appendChild(c)
-    container.children.push(c)
-  };
-
-  doTree()
-
-  changeUrlEventCallback();
-
-  window.addEventListener("popstate", changeUrlEventCallback);
-
-  // console.log("doTree()", doTree());
-  
+    oldUrlPieces = newUrlPieces;
+  }, [currentRoute]);
 
   return container;
 };
 
-const RouteLink = (...args) => {
+export const RouteLink = (...args) => {
   const { href, onclick } = fromArgs(args);
 
   const onclickLink = (e) => {
@@ -111,17 +141,21 @@ const RouteLink = (...args) => {
 
     onclick?.(e);
 
-    if (href !== currentRoute()) {
-      let result;
-      if (typeof href === "function") {
-        result = href();
-      } else {
-        result = href;
-      }
-
-      window.history.pushState({}, "", result);
-      setCurrentRoute(result);
+    let url;
+    if (typeof href === "function") {
+      url = href();
+    } else {
+      url = href;
     }
+
+    if (isSameUrl(url)) {
+      return;
+    }
+
+    url = formatUrl(url);
+
+    window.history.pushState({}, "", url);
+    setCurrentRoute(formatUrl(window.location.pathname));
   };
 
   return A(
@@ -133,10 +167,11 @@ const RouteLink = (...args) => {
 };
 
 const $$RouteOutletSymbol = Symbol("$$RouteOutletSymbol");
-const RouteOutlet = () => {
-  const outlet = new BaseComponent("comment", [
-    props({ [$$RouteOutletSymbol]: true, text: "$$RouteOutlet" }),
+export const RouteOutlet = () => {
+  const outlet = new BaseComponent("fragment", [
+    props({ name: `RouteOutlet-${Math.random()}` }),
   ]);
+  outletCtx = outlet;
   return outlet;
 };
-RouteOutlet.type = "outlet";
+RouteOutlet.type = $$RouteOutletSymbol;

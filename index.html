@@ -10,97 +10,130 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script type="module">
-      import { Counter } from "/pages/Counter.mjs";
       import { bootstrap } from "/bootstrap.mjs";
-      import { FragmentTest } from "/pages/Fragment.mjs";
-      // const Home = () => {
-      //   const [random, setRandom] = signal(Math.random().toString(36));
-      //   return Fragment(
-      //     Div(
-      //       props({
-      //         className: "fixed flex justify-center gap-4 p-4 text-lg",
-      //       }),
-      //       RouteLink("/home", props({ href: "/home" })),
-      //       RouteLink("/home/inside", props({ href: "/home/inside" })),
-      //       RouteLink(
-      //         "NotFound",
-      //         props({
-      //           href: random,
-      //           onclick: () => setRandom(Math.random().toString(36)),
-      //         })
-      //       )
-      //     ),
+      import { signal, react } from "/signal.mjs";
+      import {
+        Show,
+        List,
+        Div,
+        Fragment,
+        Button,
+        Br,
+        props,
+      } from "/components.mjs";
+      import { RouteLink, RoutesProvider, RouteOutlet } from "/coy-route.mjs";
+      import { TodoPage } from "/pages/TodoPage.mjs";
+      import { FragmentTest } from "/pages/FragmentTest.mjs";
+      import { ListExample } from "/pages/ListExample.mjs";
+      import { NotFound } from "/pages/NotFound.mjs";
+      import { Counter } from "/pages/Counter.mjs";
 
-      //     // so basicaly we will
-      //     RoutesProvider([
-      //       {
-      //         path: "",
-      //         component: () => Div("aqui"),
-      //       },
-      //       {
-      //         path: "home",
-      //         component: () => {
-      //           const [text, setText] = signal("");
+      /*
+        {
+              path: "teste",
+              component: () => Div("1", RouteOutlet()),
+              routes: [
+                {
+                  path: "inside",
+                  component: () => Div("2", RouteOutlet()),
+                  routes: [{ path: "again", component: () => Div("3") }],
+                },
+              ],
+            },
+            {
+              path: "home",
+              component: () => {
+                const [text, setText] = signal(Math.random().toString(36));
 
-      //           setInterval(() => {
-      //             setText(Math.random().toString(36));
-      //           }, 4000);
+                // setInterval(() => {
+                //   setText(Math.random().toString(36));
+                // }, 4000);
 
-      //           return Div(props({ id: "qualquer" }), text, RouteOutlet());
-      //         },
-      //         routes: [
-      //           {
-      //             path: "",
-      //             component: () => Div("/home/", RouteOutlet()),
-      //           },
-      //           {
-      //             path: "sub-route",
-      //             component: () => Div("/home/inside", RouteOutlet()),
-      //             routes: [
-      //               {
-      //                 path: "/",
-      //                 component: () => Div("sub-route/child", RouteOutlet()),
-      //               },
-      //             ],
-      //           },
-      //         ],
-      //       },
-      //     ])
-      //   );
-      // };
+                return Div(props({ id: "qualquer" }), text, RouteOutlet());
+              },
+              routes: [
+                {
+                  path: "sub-route",
+                  component: () => Div("/home/subroute", RouteOutlet()),
+                  routes: [
+                    {
+                      path: "dentro",
+                      component: () =>
+                        Div(
+                          "sub-route/child",
+                          Br(),
+                          Br(),
+                          RouteLink(
+                            `/home/sub-route`,
+                            props({
+                              className:
+                                "border-2 border-red-500 cursor-pointer",
+                              href: "/home/sub-route",
+                            })
+                          ),
+                          Br(),
+                          Br(),
+                          RouteLink(
+                            `/teste/inside/again`,
+                            props({
+                              className:
+                                "border-2 border-red-500 cursor-pointer",
+                              href: "/teste/inside/again",
+                            })
+                          ),
+                          Br(),
+                          Br(),
+                          RouteLink(
+                            `altos nada`,
+                            props({
+                              className:
+                                "border-2 border-red-500 cursor-pointer",
+                              href: "/",
+                            })
+                          ),
+                          RouteOutlet()
+                        ),
+                    },
+                  ],
+                },
+              ],
+            },
+      */
 
-      // const ListExample = () => {
-      //   const [list, setList] = signal([
-      //     { label: "example1" },
-      //     { label: "example2" },
-      //   ]);
+      const routes = [
+        {
+          path: "/",
+          component: () => {
+            return Div(
+              Div(
+                props({
+                  className: "flex gap-4 p-4 text-lg [&>a:hover]:underline",
+                }),
+                RouteLink("TodoApp", props({ href: "/todo" })),
+                RouteLink("FragmentTest", props({ href: "/fragment" })),
+                RouteLink("ListExample", props({ href: "/list" })),
+                RouteLink("NotFound", props({ href: "/not-found" })),
+                RouteLink("Counter", props({ href: "/counter" }))
+              ),
 
-      //   // return List({
-      //   //   data: [{label: "example1"}, {label: "example2"}],
-      //   //   render: (item) => Div(item.label),
-      //   //   // keyExtractor: (item) => item().label
-      //   // })
+              RouteOutlet()
+            );
+          },
+          routes: [
+            { path: "todo", component: () => TodoPage() },
+            { path: "fragment", component: () => FragmentTest() },
+            { path: "list", component: () => ListExample() },
+            { path: "not-found", component: () => NotFound() },
+            { path: "counter", component: () => Counter() },
+          ],
+        },
+      ];
 
-      //   // setInterval(() => {
-      //   //   setList((old) => [...old, { label: Math.random().toString() }]);
-      //   // }, 200);
+      const Home = () => {
+        return Fragment(RoutesProvider(routes, {}));
+      };
 
-      //   return Show({
-      //     when: react(() => true),
-      //     content: List({
-      //       data: list,
-      //       render: (item) => Div(item().label),
-      //       keyExtractor: (item) => item().label,
-      //     }),
-      //   });
-      // };
-
-      // bootstrap(app, ListExample);
-      // bootstrap(app, Home);
-      // bootstrap(app, TodoPage);
-
-      bootstrap(app, FragmentTest);
-      // bootstrap(app, Counter)
+      bootstrap(app, Home);
     </script>
   </body>
 </html>

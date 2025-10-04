@@ -1,3 +1,6 @@
+import { B, Div, props } from "../components.mjs";
+import { useRouter } from "../coy-route.mjs";
+
 const NotFound = () => {
   const { route } = useRouter();
 
@@ -9,3 +12,5 @@ const NotFound = () => {
     })
   );
 };
+
+export { NotFound };
