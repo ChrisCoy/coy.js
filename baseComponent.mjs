@@ -45,6 +45,15 @@ export class BaseComponent {
           return acc;
         }
 
+        // to check if it's a plain object
+        if(arg.constructor === Object){
+          debugger
+          const { ref, ...rest } = arg;
+          refFn = ref;
+          acc.propsObjs.push(rest);
+          return acc;
+        }
+
         acc.children.push(arg);
         return acc;
       },
@@ -61,22 +70,27 @@ export class BaseComponent {
   renderChildren() {
     for (let i = 0; i < this.children.length; i++) {
       const element = this.children[i];
+      let result;
 
       if (this.tag === "fragment") {
         element.parent = this.parent;
-        this.appendChild(element, false);
+        result = this.appendChild(element, false);
       } else {
         element.parent = this;
-        this.appendChild(element, false);
+        result = this.appendChild(element, false);
       }
 
-      if (element.tag !== "text") {
-        element.renderChildren();
+      if (result.tag !== "text") {
+        result.renderChildren();
       }
     }
   }
 
   destroy() {
+    if (this.tag === "fragment") {
+      this.children.forEach((el) => el.destroy());
+    }
+    this.children = [];
     this.element.remove();
   }
 

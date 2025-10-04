@@ -144,7 +144,7 @@ export const Fragment = (...args) => new BaseComponent("fragment", args);
 
 export const CustomComponent = (tag, ...args) => new BaseComponent(tag, args);
 
-export const Show = ({ when, content, fallBack }) => {
+export const Show = ({ when, content, fallBack = undefined }) => {
   let lastState = null;
 
   if (isCoySignal(when)) {

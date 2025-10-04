@@ -1,11 +1,21 @@
 import { BaseComponent } from "./baseComponent.mjs";
 import { A, fromArgs, props } from "./components.mjs";
-import { signal } from "./signal.mjs";
+import { effectOnDependencies, signal } from "./signal.mjs";
 
-/** @type {BaseComponent} */
-let outletCtx = null;
+const isSameUrl = (url = "") => {
+  const urlPathname = new URL(formatUrl(url), window.location.href).pathname;
+  if (formatUrl(urlPathname) === currentRoute()) {
+    return true;
+  }
 
-const formatUrl = (url) => {
+  return false;
+};
+
+const formatUrl = (url = "") => {
+  if (url === "" || url === "/") {
+    return "/";
+  }
+
   let newUrl = url;
   if (newUrl.endsWith("index.html")) {
     newUrl = newUrl.replace("index.html", "");
@@ -15,6 +25,8 @@ const formatUrl = (url) => {
 
   return newUrl;
 };
+/** @type {BaseComponent} */
+let outletCtx = null;
 
 const [currentRoute, setCurrentRoute] = signal(
   formatUrl(window.location.pathname)
@@ -24,11 +36,13 @@ export const useRouter = () => {
   return {
     route: currentRoute,
     // options: {params: string[]; query: string[], state: maybe?}
-    push: (path, options) => {
-      if (path === currentRoute()) return;
+    navigate: (url, options) => {
+      if (isSameUrl(url)) return;
 
-      window.history.pushState({}, "", path);
-      setCurrentRoute(path);
+      const formattedUrl = formatUrl(url);
+
+      window.history.pushState({}, "", formattedUrl);
+      setCurrentRoute(formattedUrl);
     },
   };
 };
@@ -51,11 +65,11 @@ export const useRouter = () => {
  *    ]
  * }]
  */
-
-export const RoutesProvider = (routes) => {
+// TODO: REFACTOR THIS, IT'S A MESS
+export const RoutesProvider = (routeTree) => {
   const container = new BaseComponent("fragment");
 
-  let tree = [];
+  let oldUrlPieces = [];
 
   const changeUrlEventCallback = () => {
     setCurrentRoute(formatUrl(window.location.pathname));
@@ -64,137 +78,59 @@ export const RoutesProvider = (routes) => {
   changeUrlEventCallback();
   window.addEventListener("popstate", changeUrlEventCallback);
 
-  debugger;
+  const getUrlPieces = (url = "") =>
+    url.split("/").map((urlPiece) => (urlPiece === "" ? "/" : urlPiece));
 
-  const getUrlPieces = () => {
-    const curRoute = currentRoute();
-    const splittedRoutes = curRoute.split("/");
-    let pieces = [];
+  effectOnDependencies(() => {
+    const newUrlPieces = getUrlPieces(currentRoute());
+    let rootNode = routeTree;
+    let rootComponent = container;
 
-    if (curRoute === "/" || curRoute === "") {
-      return ["/"];
-    }
+    for (let i = 0; i < newUrlPieces.length; i++) {
+      debugger;
+      const newUrlPiece = newUrlPieces[i];
+      const oldUrlPiece = oldUrlPieces[i];
 
-    for (const piece of splittedRoutes) {
-      if (piece !== "/" && piece !== "") {
-        pieces.push(piece);
-      }
-    }
+      const foundRoute = rootNode.find((r) => r.path === newUrlPiece);
 
-    return pieces;
-  };
-
-  const getComponents = (
-    nodesArray = [],
-    pieces = [],
-    components = [],
-    valid = true
-  ) => {
-    if (pieces.length === 0) {
-      const lastNode = nodesArray.find((n) => n.path === "/");
-
-      if (lastNode?.component) {
-        components.push({
-          piece: "/",
-          component: lastNode.component,
-        });
-      }
-
-      return {
-        components,
-        valid,
-      };
-    }
-
-    let curPiece = pieces[0];
-    let restUrlPieces = pieces.slice(1);
-
-    for (const node of nodesArray) {
-      if (node.path === curPiece) {
-        if (node.component) {
-          components.push({
-            piece: node.path,
-            component: node.component,
-          });
+      if (newUrlPiece === oldUrlPiece) {
+        if (foundRoute?.outlet) {
+          rootComponent = foundRoute.outlet;
         }
-        const result = getComponents(
-          node.routes,
-          restUrlPieces,
-          components,
-          valid
-        );
-
-        return result;
-      }
-    }
-
-    return {
-      components,
-      valid: false,
-    };
-  };
-
-  const populate = (treeRoutes, root) => {
-    const newTree = getComponents(treeRoutes, getUrlPieces());
-
-    // for (const node of ) {
-    //   if( !== )
-    // }
-
-    for (let i = 0; i < newTree.components.length; i++) {
-      const newNode = newTree.components[i];
-      const oldNode = tree[i];
-
-      if (newNode.piece === oldNode?.piece) {
+        rootNode = foundRoute?.routes;
         continue;
       }
 
-      // if the component is new we remove all of the root children and then put the newNode
-      if (newNode.piece !== oldNode?.piece) {
-        root.removeAllChildren();
+      if (!foundRoute) break;
+      if (foundRoute.path !== newUrlPiece) break;
 
-        if (newNode.component) {
-          root.appendChild(newNode.component);
-          if (outletCtx) {
-            root = outletCtx;
-            newNode
-          }
+      rootNode = foundRoute.routes;
+
+      if (!foundRoute.component) {
+        continue;
+      } else {
+        rootComponent?.removeAllChildren();
+        rootComponent?.appendChild(foundRoute.component);
+        rootComponent?.renderChildren();
+
+        if (outletCtx) {
+          foundRoute.outlet = outletCtx;
+          rootComponent = outletCtx;
+          outletCtx = null;
+        } else {
+          rootComponent = undefined;
         }
-
-        outletCtx = null;
       }
     }
-  };
+
+    if (oldUrlPieces.length !== newUrlPieces.length) {
+      rootComponent?.removeAllChildren();
+    }
+
+    oldUrlPieces = newUrlPieces;
+  }, [currentRoute]);
 
   return container;
-
-  // // LIXO
-  // const child = treeeeeeeeee[1].component();
-
-  // // console.log("child", child.element.documentQuery);
-
-  // container.appendChild(child, true);
-
-  // let freezedOutlet = outletCtx;
-
-  // debugger;
-  // /** @type {BaseComponent} */
-  // const toAdd = treeeeeeeeee[1].routes[0].component();
-  // freezedOutlet.appendChild(toAdd, true);
-  // toAdd.renderChildren();
-
-  // // outletCtx.children.push(tree[1].routes[0].component());
-
-  // setTimeout(() => {
-  //   debugger;
-  //   freezedOutlet.removeAllChildren();
-  //   /** @type {BaseComponent} */
-  //   const algo = treeeeeeeeee[1].routes[1].component();
-  //   freezedOutlet.appendChild(algo, true);
-  //   algo.renderChildren();
-  // }, 2000);
-
-  // // console.log("doTree()", doTree());
 };
 
 export const RouteLink = (...args) => {
@@ -205,17 +141,21 @@ export const RouteLink = (...args) => {
 
     onclick?.(e);
 
-    if (href !== currentRoute()) {
-      let result;
-      if (typeof href === "function") {
-        result = href();
-      } else {
-        result = href;
-      }
-
-      window.history.pushState({}, "", result);
-      setCurrentRoute(result);
+    let url;
+    if (typeof href === "function") {
+      url = href();
+    } else {
+      url = href;
     }
+
+    if (isSameUrl(url)) {
+      return;
+    }
+
+    url = formatUrl(url);
+
+    window.history.pushState({}, "", url);
+    setCurrentRoute(formatUrl(window.location.pathname));
   };
 
   return A(
@@ -228,23 +168,10 @@ export const RouteLink = (...args) => {
 
 const $$RouteOutletSymbol = Symbol("$$RouteOutletSymbol");
 export const RouteOutlet = () => {
-  // const outlet = new BaseComponent("comment", [
-  //   props({ [$$RouteOutletSymbol]: true, text: "Coy.RouteOutlet" }),
-  // ]);
   const outlet = new BaseComponent("fragment", [
     props({ name: `RouteOutlet-${Math.random()}` }),
   ]);
   outletCtx = outlet;
   return outlet;
 };
-RouteOutlet.type = "outlet";
-
-// const resultComponent = node.component();
-// root.appendChild(resultComponent);
-// const innerOutlet = outletCtx;
-
-// if (innerOutlet) {
-//   renderTree(innerOutlet, node.routes, restUrlPieces);
-// } else {
-//   renderTree(root, node.routes, restUrlPieces);
-// }
+RouteOutlet.type = $$RouteOutletSymbol;

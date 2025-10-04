@@ -105,7 +105,8 @@ export const TodoPage = () => {
       Hr(),
       ListView({
         data: todos,
-        keyExtractor: (todo) => todo().id,
+        // keyExtractor: (todo) => todo().id,
+        keyExtractor: (todo) => Math.random().toString(36),
         render: (todo) =>
           TodoItem({
             todoSignal: todo,
