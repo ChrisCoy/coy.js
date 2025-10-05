@@ -12,16 +12,17 @@ const isSameUrl = (url = "") => {
 };
 
 const formatUrl = (url = "") => {
-  if (url === "" || url === "/") {
-    return "/";
-  }
-
   let newUrl = url;
   if (newUrl.endsWith("index.html")) {
     newUrl = newUrl.replace("index.html", "");
   }
 
   newUrl = newUrl.replace(/\/$/, "");
+
+  if (newUrl === "" || newUrl === "/") {
+    return "/";
+  }
+
 
   return newUrl;
 };
@@ -92,7 +93,6 @@ export const RoutesProvider = (routeTree) => {
     let rootComponent = container;
 
     for (let i = 0; i < newUrlPieces.length; i++) {
-      debugger;
       const newUrlPiece = newUrlPieces[i];
       const oldUrlPiece = oldUrlPieces[i];
 

@@ -20,7 +20,7 @@
         Button,
         Br,
         props,
-        Input
+        Input,
       } from "/components.mjs";
       import {
         RouteLink,
@@ -33,6 +33,7 @@
       import { ListExample } from "/pages/ListExample.mjs";
       import { NotFound } from "/pages/NotFound.mjs";
       import { Counter } from "/pages/Counter.mjs";
+      import { StyledTestComponent } from "/pages/StyledTest.mjs";
 
       /*
         {
@@ -112,7 +113,6 @@
           component: () => {
             const router = useRouter();
 
-            debugger
             const curRoute = router.route();
             if (router.route() === "/") {
               router.navigate("/todo");
@@ -121,16 +121,18 @@
             return Div(
               Div(
                 props({
-                  className: "flex items-center gap-4 p-4 text-lg [&>a:hover]:underline",
+                  className:
+                    "flex items-center gap-4 p-4 text-lg [&>a:hover]:underline overflow-x-auto",
                 }),
                 RouteLink("TodoApp", props({ href: "/todo" })),
                 RouteLink("FragmentTest", props({ href: "/fragment" })),
                 RouteLink("ListExample", props({ href: "/list" })),
                 RouteLink("NotFound", props({ href: "/not-found" })),
                 RouteLink("Counter", props({ href: "/counter" })),
+                RouteLink("StyledTest", props({ href: "/styled" })),
                 Input({
                   className: "border-2 px-2 rounded",
-                  placeholder: "type something here"
+                  placeholder: "type something here",
                 })
               ),
 
@@ -143,6 +145,7 @@
             { path: "list", component: () => ListExample() },
             { path: "not-found", component: () => NotFound() },
             { path: "counter", component: () => Counter() },
+            { path: "styled", component: () => StyledTestComponent() },
           ],
         },
       ];

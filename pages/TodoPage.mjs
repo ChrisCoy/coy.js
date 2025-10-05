@@ -2,7 +2,6 @@ import { Button, Div, H1, Hr, Input, ListView } from "../components.mjs";
 import { effect, react, signal } from "../signal.mjs";
 import { ToastProviderGlobal, useToast } from "../toast.mjs";
 import { cn, idGenerator } from "../utils.mjs";
-import {styled} from "../styled.mjs"
 
 const genId = idGenerator();
 
