@@ -315,9 +315,9 @@ export const List = ({ data, render = (d) => d, keyExtractor }) => {
   return container;
 };
 
-export const ListView = ({ data, render, keyExtractor, empty }) => {
+export const ListView = ({ data, render, keyExtractor, empty = undefined }) => {
   return Show({
-    when: react(() => data().length > 0),
+    when: react(() => (data() || []).length > 0),
     content: List({
       data,
       render,

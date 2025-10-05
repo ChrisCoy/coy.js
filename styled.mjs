@@ -2,36 +2,88 @@ import { BaseComponent } from "./baseComponent.mjs";
 import { props } from "./components.mjs";
 import { createRandomString } from "./utils.mjs";
 
-const cssProps = [];
+const cssProps = new Set();
 
 for (const key in document.body.style) {
-  cssProps.push(key);
+  cssProps.add(key);
 }
 
 const allStylesSet = new Set();
 
+function objectToCssRule(selector, styleObj) {
+  const css = Object.entries(styleObj)
+    .map(([prop, value]) => {
+      const kebab = prop.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
+      return `${kebab}: ${value};`;
+    })
+    .join(" ");
+
+  return `${selector} { ${css} }`;
+}
+
 const getValidClassName = () => {
-  let className = createRandomString();
+  let className = `coys-${createRandomString()}`;
   while (allStylesSet.has(className)) {
-    className = createRandomString();
+    className = `coys-${createRandomString()}`;
   }
+
+  allStylesSet.add(className);
 
   return className;
 };
 
 const styled = (tagOrComponent) => {
-  let className = ".coys-" + getValidClassName();
+  const sheet = new CSSStyleSheet();
+  let className = getValidClassName();
 
   const createFn = (styles) => {
     if (styles.constructor !== Object) {
       throw new Error("Style must be a object");
     }
 
-    // ...styles here...
+    const generateStylesRecursively = (curSelector, curObject) => {
+      const buildedStyle = {};
 
-    const aaaaaaaa = () => {
-      
-    }
+      for (let [key, value] of Object.entries(curObject)) {
+        if (cssProps.has(key)) {
+          // when it's a css property
+          if (typeof value === "function") {
+          } else {
+            buildedStyle[key] = value;
+          }
+        } else if (key.startsWith("@")) {
+          // when it's a rule
+          const styleString = generateStylesRecursively(curSelector, value);
+          let mediaRule = `${key} { ${styleString} }`;
+
+          sheet.insertRule(mediaRule);
+        } else {
+          if (value.constructor !== Object) {
+            throw new Error(`Error on selector: ${key}, value must be a object`);
+          }
+
+          // when it's a selector
+          let cn;
+
+          if (key.startsWith("&")) {
+            cn = key.replace(/&/g, curSelector);
+          } else if (key.startsWith(":")) {
+            cn = `${curSelector}${key.replace(/&/g, curSelector)}`;
+          } else {
+            cn = `${curSelector} ${key.replace(/&/g, curSelector)}`;
+          }
+
+          const styleString = generateStylesRecursively(cn, value);
+          sheet.insertRule(styleString);
+        }
+      }
+
+      return objectToCssRule(curSelector, buildedStyle);
+    };
+
+    const mainStyle = generateStylesRecursively(`.${className}`, styles);
+    sheet.insertRule(mainStyle);
+    document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
 
     if (typeof tagOrComponent === "string") {
       return (...args) =>

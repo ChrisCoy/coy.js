@@ -47,7 +47,6 @@ export class BaseComponent {
 
         // to check if it's a plain object
         if(arg.constructor === Object){
-          debugger
           const { ref, ...rest } = arg;
           refFn = ref;
           acc.propsObjs.push(rest);
