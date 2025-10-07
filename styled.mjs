@@ -3,12 +3,19 @@ import { props } from "./components.mjs";
 import { createRandomString } from "./utils.mjs";
 
 const cssProps = new Set();
-
-for (const key in document.body.style) {
-  cssProps.add(key);
-}
-
 const allStylesSet = new Set();
+// /** @type {HTMLStyleElement} */
+let styleTag;
+const initLib = () => {
+  for (const key in document.body.style) {
+    cssProps.add(key);
+  }
+
+  styleTag = document.createElement("style");
+  styleTag.id = "coy-styled";
+  document.head.appendChild(styleTag);
+};
+initLib();
 
 function objectToCssRule(selector, styleObj) {
   const css = Object.entries(styleObj)
@@ -32,8 +39,22 @@ const getValidClassName = () => {
   return className;
 };
 
+function setDeep(obj, keys = [], value) {
+  let current = obj;
+
+  for (let i = 0; i < keys.length - 1; i++) {
+    current = current[keys[i]] ||= {};
+  }
+
+  current[keys[keys.length - 1]] = value;
+}
+
 const styled = (tagOrComponent) => {
-  const sheet = new CSSStyleSheet();
+  const tokens = {
+    selectors: {},
+    rules: {},
+  };
+
   let className = getValidClassName();
 
   const createFn = (styles) => {
@@ -41,31 +62,46 @@ const styled = (tagOrComponent) => {
       throw new Error("Style must be a object");
     }
 
-    const generateStylesRecursively = (curSelector, curObject) => {
-      const buildedStyle = {};
-
+    const getTokens = ({ curSelector, curObject, rule, type } = undefined) => {
       for (let [key, value] of Object.entries(curObject)) {
         if (cssProps.has(key)) {
-          // when it's a css property
-          if (typeof value === "function") {
+          if (rule) {
+            setDeep(rule, ["selectors", curSelector, key], value);
           } else {
-            buildedStyle[key] = value;
+            setDeep(tokens, ["selectors", curSelector, key], value);
           }
         } else if (key.startsWith("@")) {
-          // when it's a rule
-          const styleString = generateStylesRecursively(curSelector, value);
-          let mediaRule = `${key} { ${styleString} }`;
-
-          sheet.insertRule(mediaRule);
-        } else {
-          if (value.constructor !== Object) {
-            throw new Error(`Error on selector: ${key}, value must be a object`);
+          if (!tokens.rules[key]) {
+            tokens.rules[key] = {};
           }
 
-          // when it's a selector
+          if (key.toLowerCase().startsWith("@keyframes")) {
+            getTokens({
+              curSelector: "",
+              curObject: value,
+              rule: tokens.rules[key],
+              type: "keyframes",
+            });
+          } else {
+            getTokens({
+              curSelector,
+              curObject: value,
+              rule: tokens.rules[key],
+              type: "rule",
+            });
+          }
+        } else {
+          if (value.constructor !== Object) {
+            throw new Error(
+              `Error on selector: ${key}, value must be a object`
+            );
+          }
+
           let cn;
 
-          if (key.startsWith("&")) {
+          if (type === "keyframes") {
+            cn = key.replace(/%/g, "") + "%";
+          } else if (key.startsWith("&")) {
             cn = key.replace(/&/g, curSelector);
           } else if (key.startsWith(":")) {
             cn = `${curSelector}${key.replace(/&/g, curSelector)}`;
@@ -73,21 +109,82 @@ const styled = (tagOrComponent) => {
             cn = `${curSelector} ${key.replace(/&/g, curSelector)}`;
           }
 
-          const styleString = generateStylesRecursively(cn, value);
-          sheet.insertRule(styleString);
+          getTokens({
+            curSelector: cn,
+            curObject: value,
+            rule,
+            type: "selector",
+          });
         }
       }
-
-      return objectToCssRule(curSelector, buildedStyle);
     };
 
-    const mainStyle = generateStylesRecursively(`.${className}`, styles);
-    sheet.insertRule(mainStyle);
-    document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+    getTokens({
+      curSelector: `.${className}`,
+      curObject: styles,
+      rule: undefined,
+      type: "base",
+    });
+
+    const listenToStylesChange = (selector, styles) => {
+      for (const [key, value] of Object.entries(styles)) {
+        const typeofStyle = typeof value;
+
+        if (typeofStyle === "function") {
+          let cssRule;
+
+          setTimeout(() => {
+            for (const rule of styleTag.sheet.cssRules) {
+              if (rule.selectorText === selector) {
+                cssRule = rule;
+              }
+            }
+            debugger;
+
+            cssRule.style[key] = "pink";
+          }, 2000);
+
+          // effect(() => {
+          //   const result = value();
+          //   cssRule[key] = result;
+          // });
+        }
+      }
+    };
+
+    const generateSelectorsStyle = (selectors) => {
+      let selectorsStyle = "";
+      for (let [selector, styles] of Object.entries(selectors)) {
+        selectorsStyle += objectToCssRule(selector, styles);
+        listenToStylesChange(selector, styles);
+      }
+
+      return selectorsStyle;
+    };
+
+    const generateRulesStyle = (rules) => {
+      let rulesStyle = "";
+      for (let [rule, props] of Object.entries(rules)) {
+        rulesStyle += `${rule} {${generateSelectorsStyle(props.selectors)}}`;
+      }
+
+      return rulesStyle;
+    };
+
+    const selectorsStyles = generateSelectorsStyle(tokens.selectors);
+    const rulesStyles = generateRulesStyle(tokens.rules);
+
+    styleTag.textContent += selectorsStyles + rulesStyles;
+
+    console.log(styleTag.textContent);
 
     if (typeof tagOrComponent === "string") {
-      return (...args) =>
-        new BaseComponent(tagOrComponent, [...args, props({ className })]);
+      return (...args) => {
+        return new BaseComponent(tagOrComponent, [
+          ...args,
+          props({ className }),
+        ]);
+      };
     }
 
     return (args) => {
@@ -107,9 +204,3 @@ const styled = (tagOrComponent) => {
 };
 
 export { styled };
-
-// const AlgumComponent = styled("div")({
-//   display: "flex",
-
-//   ["&:div > algo"]: {},
-// });

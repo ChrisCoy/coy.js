@@ -14,7 +14,7 @@ const StyledTestStyle = styled("div")({
   padding: "2rem",
   margin: "auto",
   marginTop: "4rem",
-  backgroundColor: "#f3f3f3",
+  backgroundColor: () => "#f3f3f3",
   ["h1"]: {
     fontSize: "2rem",
     fontWeight: "bold",
@@ -33,14 +33,36 @@ const StyledTestStyle = styled("div")({
       color: "#222",
     },
   },
+  ["p"]: {
+    color: "red",
+    animation: "Teste 2s infinite alternate",
+
+    ["@keyframes Teste"]: {
+      0: {
+        transform: "translateY(0px)",
+      },
+      100: {
+        transform: "translateY(100px)",
+      },
+    },
+  },
 
   ["@media(max-width: 1000px)"]: {
     backgroundColor: "purple",
     ["& div"]: {
       backgroundColor: "blue",
+      [":hover"]: {
+        backgroundColor: "pink",
+      },
     },
   },
 });
+
+const Another = styled("p")({
+  backgroundColor: "blue",
+});
+
+// const sx = (...a) => {};
 
 const StyledTestComponent = () => {
   const [pageContent, setPageContent] = signal(undefined);
@@ -56,14 +78,15 @@ const StyledTestComponent = () => {
     fetch("/pages/StyledTest.mjs")
       .then((r) => r.text())
       .then((c) => {
-        console.log(c);
         setPageContent(c);
       });
   };
   makeRequest();
 
   return StyledTestStyle(
+    // sx("bg-red-500", "text-white", "p-4", "rounded"),
     H1("This page script content: "),
+    Another("Texto"),
     Div(Pre(Code(react(content))))
   );
 };

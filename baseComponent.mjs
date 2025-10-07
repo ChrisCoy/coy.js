@@ -46,14 +46,17 @@ export class BaseComponent {
         }
 
         // to check if it's a plain object
-        if(arg.constructor === Object){
+        if(arg?.constructor === Object){
           const { ref, ...rest } = arg;
           refFn = ref;
           acc.propsObjs.push(rest);
           return acc;
         }
 
-        acc.children.push(arg);
+        if(!!arg){
+          acc.children.push(arg);
+        }
+
         return acc;
       },
       { children: [], propsObjs: [] }

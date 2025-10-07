@@ -96,3 +96,31 @@ console.log(`${getValue}`);      // Saída: "<$!>"
         // ser usado no template podera mais tarde ter o valor trocado.
         // dai pra contornar a possibilidade de poder ser usar varios signals
         // pode ser usado um array para colocar as funções de atualização lá
+
+
+
+// type Props<T = any, K = any> = K extends PropsType ? PropsType<T> : K;
+
+// type DivProperties = {
+//   id: string;
+//   style: object;
+// }
+
+// function Div(...props: Props<DivProperties>[]){
+
+// }
+
+// function H1(...props: Props<{h1: string}>[]){}
+
+// type PropsType<T = any> = T
+
+// function props<T>(props: PropsType<T>) : PropsType<T> {
+//   return "" as PropsType<T>;
+// }
+
+
+
+// Div(props({id: "", style: {}}))
+
+
+// H1(props({h1: ""}))
