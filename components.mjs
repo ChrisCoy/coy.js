@@ -8,7 +8,8 @@ import {
   signal,
   signalToObject,
 } from "./signal.mjs";
-import { findDuplicates, hasDuplicates, swipeItemsOnArray } from "./utils.mjs";
+import { createCoyComponent } from "./web/components/createCoyComponent.mjs";
+import { findDuplicates, hasDuplicates, swipeItemsOnArray } from "./web/utils/utils.mjs";
 
 // TODO: to have a better typescript support we can pass the tag as the generic
 export const props = (p) => new Props(p);
@@ -28,126 +29,128 @@ export const fromArgs = (args) => {
   return Object.assign({}, ...propsObjs);
 };
 
-export const H1 = (...args) => new BaseComponent("h1", args);
-export const H2 = (...args) => new BaseComponent("h2", args);
-export const H3 = (...args) => new BaseComponent("h3", args);
-export const H4 = (...args) => new BaseComponent("h4", args);
-export const H5 = (...args) => new BaseComponent("h5", args);
-export const H6 = (...args) => new BaseComponent("h6", args);
-export const Hr = (...args) => new BaseComponent("hr", args);
-export const Br = (...args) => new BaseComponent("br", args);
-export const Div = (...args) => new BaseComponent("div", args);
-export const Button = (...args) => new BaseComponent("button", args);
-export const Input = (...args) => new BaseComponent("input", args);
-export const A = (...args) => new BaseComponent("a", args);
-export const Abbr = (...args) => new BaseComponent("abbr", args);
-export const Address = (...args) => new BaseComponent("address", args);
-export const Area = (...args) => new BaseComponent("area", args);
-export const Article = (...args) => new BaseComponent("article", args);
-export const Aside = (...args) => new BaseComponent("aside", args);
-export const Audio = (...args) => new BaseComponent("audio", args);
-export const B = (...args) => new BaseComponent("b", args);
-export const Base = (...args) => new BaseComponent("base", args);
-export const Bdi = (...args) => new BaseComponent("bdi", args);
-export const Bdo = (...args) => new BaseComponent("bdo", args);
-export const Blockquote = (...args) => new BaseComponent("blockquote", args);
-// const Body = (...args) => new BaseComponent("body", args);
-export const Canvas = (...args) => new BaseComponent("canvas", args);
-export const Caption = (...args) => new BaseComponent("caption", args);
-export const Cite = (...args) => new BaseComponent("cite", args);
-export const Code = (...args) => new BaseComponent("code", args);
-export const Col = (...args) => new BaseComponent("col", args);
-export const Colgroup = (...args) => new BaseComponent("colgroup", args);
-export const Data = (...args) => new BaseComponent("data", args);
-export const Datalist = (...args) => new BaseComponent("datalist", args);
-export const Dd = (...args) => new BaseComponent("dd", args);
-export const Del = (...args) => new BaseComponent("del", args);
-export const Details = (...args) => new BaseComponent("details", args);
-export const Dfn = (...args) => new BaseComponent("dfn", args);
-export const Dialog = (...args) => new BaseComponent("dialog", args);
-export const Dl = (...args) => new BaseComponent("dl", args);
-export const Dt = (...args) => new BaseComponent("dt", args);
-export const Em = (...args) => new BaseComponent("em", args);
-export const Embed = (...args) => new BaseComponent("embed", args);
-export const Fieldset = (...args) => new BaseComponent("fieldset", args);
-export const Figcaption = (...args) => new BaseComponent("figcaption", args);
-export const Figure = (...args) => new BaseComponent("figure", args);
-export const Footer = (...args) => new BaseComponent("footer", args);
-export const Form = (...args) => new BaseComponent("form", args);
-export const H = (...args) => new BaseComponent("h", args);
-// const Head = (...args) => new BaseComponent("head", args);
-export const Header = (...args) => new BaseComponent("header", args);
-export const Hgroup = (...args) => new BaseComponent("hgroup", args);
-export const I = (...args) => new BaseComponent("i", args);
-export const Iframe = (...args) => new BaseComponent("iframe", args);
-export const Img = (...args) => new BaseComponent("img", args);
-export const Ins = (...args) => new BaseComponent("ins", args);
-export const Kbd = (...args) => new BaseComponent("kbd", args);
-export const Label = (...args) => new BaseComponent("label", args);
-export const Legend = (...args) => new BaseComponent("legend", args);
-export const Li = (...args) => new BaseComponent("li", args);
-export const Link = (...args) => new BaseComponent("link", args);
-export const Main = (...args) => new BaseComponent("main", args);
-export const MapElement = (...args) => new BaseComponent("map", args);
-export const Mark = (...args) => new BaseComponent("mark", args);
-// const Meta = (...args) => new BaseComponent("meta", args);
-export const Meter = (...args) => new BaseComponent("meter", args);
-export const Nav = (...args) => new BaseComponent("nav", args);
-export const Noscript = (...args) => new BaseComponent("noscript", args);
-export const ObjectElement = (...args) => new BaseComponent("object", args);
-export const Ol = (...args) => new BaseComponent("ol", args);
-export const Optgroup = (...args) => new BaseComponent("optgroup", args);
-export const Option = (...args) => new BaseComponent("option", args);
-export const Output = (...args) => new BaseComponent("output", args);
-export const P = (...args) => new BaseComponent("p", args);
-export const Param = (...args) => new BaseComponent("param", args);
-export const Picture = (...args) => new BaseComponent("picture", args);
-export const Pre = (...args) => new BaseComponent("pre", args);
-export const Progress = (...args) => new BaseComponent("progress", args);
-export const Q = (...args) => new BaseComponent("q", args);
-export const Rp = (...args) => new BaseComponent("rp", args);
-export const Rt = (...args) => new BaseComponent("rt", args);
-export const Ruby = (...args) => new BaseComponent("ruby", args);
-export const S = (...args) => new BaseComponent("s", args);
-export const Samp = (...args) => new BaseComponent("samp", args);
-export const Script = (...args) => new BaseComponent("script", args);
-export const Section = (...args) => new BaseComponent("section", args);
-export const Select = (...args) => new BaseComponent("select", args);
-export const Small = (...args) => new BaseComponent("small", args);
-export const Source = (...args) => new BaseComponent("source", args);
-export const Span = (...args) => new BaseComponent("span", args);
-export const Strong = (...args) => new BaseComponent("strong", args);
-export const Style = (...args) => new BaseComponent("style", args);
-export const Sub = (...args) => new BaseComponent("sub", args);
-export const Summary = (...args) => new BaseComponent("summary", args);
-export const Sup = (...args) => new BaseComponent("sup", args);
-export const Table = (...args) => new BaseComponent("table", args);
-export const Tbody = (...args) => new BaseComponent("tbody", args);
-export const Td = (...args) => new BaseComponent("td", args);
-export const Template = (...args) => new BaseComponent("template", args);
-export const Textarea = (...args) => new BaseComponent("textarea", args);
-export const Tfoot = (...args) => new BaseComponent("tfoot", args);
-export const Th = (...args) => new BaseComponent("th", args);
-export const Thead = (...args) => new BaseComponent("thead", args);
-export const Time = (...args) => new BaseComponent("time", args);
-// const Title = (...args) => new BaseComponent("title", args);
-export const Tr = (...args) => new BaseComponent("tr", args);
-export const Track = (...args) => new BaseComponent("track", args);
-export const U = (...args) => new BaseComponent("u", args);
-export const Ul = (...args) => new BaseComponent("ul", args);
-export const Var = (...args) => new BaseComponent("var", args);
-export const Video = (...args) => new BaseComponent("video", args);
-export const Wbr = (...args) => new BaseComponent("wbr", args);
+export const H1 = (...args) => createCoyComponent("h1", args);
+export const H2 = (...args) => createCoyComponent("h2", args);
+export const H3 = (...args) => createCoyComponent("h3", args);
+export const H4 = (...args) => createCoyComponent("h4", args);
+export const H5 = (...args) => createCoyComponent("h5", args);
+export const H6 = (...args) => createCoyComponent("h6", args);
+export const Hr = (...args) => createCoyComponent("hr", args);
+export const Br = (...args) => createCoyComponent("br", args);
+export const Div = (...args) => createCoyComponent("div", args);
+export const Button = (...args) => createCoyComponent("button", args);
+export const Input = (...args) => createCoyComponent("input", args);
+export const A = (...args) => createCoyComponent("a", args);
+export const Abbr = (...args) => createCoyComponent("abbr", args);
+export const Address = (...args) => createCoyComponent("address", args);
+export const Area = (...args) => createCoyComponent("area", args);
+export const Article = (...args) => createCoyComponent("article", args);
+export const Aside = (...args) => createCoyComponent("aside", args);
+export const Audio = (...args) => createCoyComponent("audio", args);
+export const B = (...args) => createCoyComponent("b", args);
+export const Base = (...args) => createCoyComponent("base", args);
+export const Bdi = (...args) => createCoyComponent("bdi", args);
+export const Bdo = (...args) => createCoyComponent("bdo", args);
+export const Blockquote = (...args) => createCoyComponent("blockquote", args);
+// const Body = (...args) => createCoyComponent("body", args);
+export const Canvas = (...args) => createCoyComponent("canvas", args);
+export const Caption = (...args) => createCoyComponent("caption", args);
+export const Cite = (...args) => createCoyComponent("cite", args);
+export const Code = (...args) => createCoyComponent("code", args);
+export const Col = (...args) => createCoyComponent("col", args);
+export const Colgroup = (...args) => createCoyComponent("colgroup", args);
+export const Data = (...args) => createCoyComponent("data", args);
+export const Datalist = (...args) => createCoyComponent("datalist", args);
+export const Dd = (...args) => createCoyComponent("dd", args);
+export const Del = (...args) => createCoyComponent("del", args);
+export const Details = (...args) => createCoyComponent("details", args);
+export const Dfn = (...args) => createCoyComponent("dfn", args);
+export const Dialog = (...args) => createCoyComponent("dialog", args);
+export const Dl = (...args) => createCoyComponent("dl", args);
+export const Dt = (...args) => createCoyComponent("dt", args);
+export const Em = (...args) => createCoyComponent("em", args);
+export const Embed = (...args) => createCoyComponent("embed", args);
+export const Fieldset = (...args) => createCoyComponent("fieldset", args);
+export const Figcaption = (...args) => createCoyComponent("figcaption", args);
+export const Figure = (...args) => createCoyComponent("figure", args);
+export const Footer = (...args) => createCoyComponent("footer", args);
+export const Form = (...args) => createCoyComponent("form", args);
+export const H = (...args) => createCoyComponent("h", args);
+// const Head = (...args) => createCoyComponent("head", args);
+export const Header = (...args) => createCoyComponent("header", args);
+export const Hgroup = (...args) => createCoyComponent("hgroup", args);
+export const I = (...args) => createCoyComponent("i", args);
+export const Iframe = (...args) => createCoyComponent("iframe", args);
+export const Img = (...args) => createCoyComponent("img", args);
+export const Ins = (...args) => createCoyComponent("ins", args);
+export const Kbd = (...args) => createCoyComponent("kbd", args);
+export const Label = (...args) => createCoyComponent("label", args);
+export const Legend = (...args) => createCoyComponent("legend", args);
+export const Li = (...args) => createCoyComponent("li", args);
+export const Link = (...args) => createCoyComponent("link", args);
+export const Main = (...args) => createCoyComponent("main", args);
+export const MapElement = (...args) => createCoyComponent("map", args);
+export const Mark = (...args) => createCoyComponent("mark", args);
+// const Meta = (...args) => createCoyComponent("meta", args);
+export const Meter = (...args) => createCoyComponent("meter", args);
+export const Nav = (...args) => createCoyComponent("nav", args);
+export const Noscript = (...args) => createCoyComponent("noscript", args);
+export const ObjectElement = (...args) => createCoyComponent("object", args);
+export const Ol = (...args) => createCoyComponent("ol", args);
+export const Optgroup = (...args) => createCoyComponent("optgroup", args);
+export const Option = (...args) => createCoyComponent("option", args);
+export const Output = (...args) => createCoyComponent("output", args);
+export const P = (...args) => createCoyComponent("p", args);
+export const Param = (...args) => createCoyComponent("param", args);
+export const Picture = (...args) => createCoyComponent("picture", args);
+export const Pre = (...args) => createCoyComponent("pre", args);
+export const Progress = (...args) => createCoyComponent("progress", args);
+export const Q = (...args) => createCoyComponent("q", args);
+export const Rp = (...args) => createCoyComponent("rp", args);
+export const Rt = (...args) => createCoyComponent("rt", args);
+export const Ruby = (...args) => createCoyComponent("ruby", args);
+export const S = (...args) => createCoyComponent("s", args);
+export const Samp = (...args) => createCoyComponent("samp", args);
+export const Script = (...args) => createCoyComponent("script", args);
+export const Section = (...args) => createCoyComponent("section", args);
+export const Select = (...args) => createCoyComponent("select", args);
+export const Small = (...args) => createCoyComponent("small", args);
+export const Source = (...args) => createCoyComponent("source", args);
+export const Span = (...args) => createCoyComponent("span", args);
+export const Strong = (...args) => createCoyComponent("strong", args);
+export const Style = (...args) => createCoyComponent("style", args);
+export const Sub = (...args) => createCoyComponent("sub", args);
+export const Summary = (...args) => createCoyComponent("summary", args);
+export const Sup = (...args) => createCoyComponent("sup", args);
+export const Table = (...args) => createCoyComponent("table", args);
+export const Tbody = (...args) => createCoyComponent("tbody", args);
+export const Td = (...args) => createCoyComponent("td", args);
+export const Template = (...args) => createCoyComponent("template", args);
+export const Textarea = (...args) => createCoyComponent("textarea", args);
+export const Tfoot = (...args) => createCoyComponent("tfoot", args);
+export const Th = (...args) => createCoyComponent("th", args);
+export const Thead = (...args) => createCoyComponent("thead", args);
+export const Time = (...args) => createCoyComponent("time", args);
+// const Title = (...args) => createCoyComponent("title", args);
+export const Tr = (...args) => createCoyComponent("tr", args);
+export const Track = (...args) => createCoyComponent("track", args);
+export const U = (...args) => createCoyComponent("u", args);
+export const Ul = (...args) => createCoyComponent("ul", args);
+export const Var = (...args) => createCoyComponent("var", args);
+export const Video = (...args) => createCoyComponent("video", args);
+export const Wbr = (...args) => createCoyComponent("wbr", args);
 
-export const Fragment = (...args) => new BaseComponent("fragment", args);
+export const Fragment = (...args) => createCoyComponent("fragment", args);
 
-export const CustomComponent = (tag, ...args) => new BaseComponent(tag, args);
+export const CustomComponent = (tag, ...args) => createCoyComponent(tag, args);
 
 export const Show = ({ when, content, fallBack = undefined }) => {
   let lastState = null;
 
+  return createCoyComponent("fragment");
+
   if (isCoySignal(when)) {
-    const container = new BaseComponent("fragment");
+    const container = createCoyComponent("fragment");
 
     effect(() => {
       const mustShowContent = when();
@@ -157,16 +160,16 @@ export const Show = ({ when, content, fallBack = undefined }) => {
           mustShowContent === null ||
           mustShowContent === undefined;
 
-        container.removeAllChildren();
+        // container.removeAllChildren();
 
-        let component;
-        if (!isFallBack && content) {
-          component = container.appendChild(content);
-        } else {
-          component = container.appendChild(fallBack);
-        }
+        // let component;
+        // if (!isFallBack && content) {
+        //   component = container.appendChild(content);
+        // } else {
+        //   component = container.appendChild(fallBack);
+        // }
 
-        component.renderChildren()
+        // component.renderChildren()
 
         // if(component.tag === "void" && fallBack) {
         //   component = createElement(fallBack)
@@ -200,9 +203,11 @@ export const List = ({ data, render = (d) => d, keyExtractor }) => {
     );
   }
 
-  const container = new BaseComponent("fragment", [
+  const container = createCoyComponent("fragment", [
     props({ id: Math.random() }),
   ]);
+
+  return container;
 
   if (isCoySignal(data)) {
     if (!keyExtractor) {
@@ -241,9 +246,9 @@ export const List = ({ data, render = (d) => d, keyExtractor }) => {
           signals.splice(i, 1);
           keys.splice(i, 1);
 
-          if (container.parent) {
-            container.removeChildAt(i);
-          }
+          // if (container.parent) {
+          //   container.removeChildAt(i);
+          // }
 
           i = i - 1;
         }
@@ -267,12 +272,12 @@ export const List = ({ data, render = (d) => d, keyExtractor }) => {
             // const component = createElement(render(memo(signals[i].get)));
 
             const component = render(signals[i].get);
-            component.parent = container.parent;
+            // component.parent = container.parent;
             component.renderChildren();
 
             console.log(component);
 
-            container.appendChild(component, true);
+            // container.appendChild(component, true);
             // container.children.push(component);
 
             // component.parent = container.parent;
@@ -284,9 +289,9 @@ export const List = ({ data, render = (d) => d, keyExtractor }) => {
           ) {
             // when node changed it's place
             swipeItemsOnArray(signals, oldKeyIndex, i);
-            if (container.parent) {
-              container.swapChildPlaces(oldKeyIndex, i);
-            }
+            // if (container.parent) {
+            //   container.swapChildPlaces(oldKeyIndex, i);
+            // }
 
             signals[i].set(result[i]);
             signals[oldKeyIndex].set(result[oldKeyIndex]);
@@ -298,12 +303,12 @@ export const List = ({ data, render = (d) => d, keyExtractor }) => {
       keys = newKeys;
     }, [data]);
   } else {
-    data.forEach((d) => {
-      const component = render(d);
-      component.parent = container.parent;
-      component.renderChildren();
-      container.appendChild(component, true);
-    });
+    // data.forEach((d) => {
+    //   const component = render(d);
+    //   component.parent = container.parent;
+    //   component.renderChildren();
+    //   container.appendChild(component, true);
+    // });
 
     // data.forEach((d) => {
     //   const result = createElement(render(d));

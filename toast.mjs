@@ -1,6 +1,6 @@
 import { Div, List, props } from "./components.mjs";
 import { react, signal } from "./signal.mjs";
-import { idGenerator } from "./utils.mjs";
+import { idGenerator } from "./web/utils/utils.mjs";
 
 const genToastId = idGenerator();
 

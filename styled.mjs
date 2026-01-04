@@ -1,6 +1,6 @@
 import { BaseComponent } from "./baseComponent.mjs";
 import { props } from "./components.mjs";
-import { createRandomString } from "./utils.mjs";
+import { createRandomString } from "./web/utils/utils.mjs";
 
 const cssProps = new Set();
 const allStylesSet = new Set();

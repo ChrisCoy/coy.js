@@ -6,7 +6,7 @@ import {
   isCoySignal,
   setPropertiesAndListenToSignals,
 } from "./signal.mjs";
-import { isStringNodeByTypeof, swipeItemsOnArray } from "./utils.mjs";
+import { isStringNodeByTypeof, swipeItemsOnArray } from "./web/utils/utils.mjs";
 
 export function isCoyComponent(component) {
   if (component instanceof BaseComponent) {

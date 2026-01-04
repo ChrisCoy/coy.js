@@ -12,7 +12,7 @@
 //   });
 // };
 
-import { react } from "./signal.mjs";
+import { react } from "../../signal.mjs";
 
 export const isStringNodeByTypeof = (type) => {
   if (type === "string" || type === "number" || type === "boolean") {

@@ -1,4 +1,4 @@
-import { isStringNodeByTypeof } from "./utils.mjs";
+import { isStringNodeByTypeof } from "./web/utils/utils.mjs";
 
 let context = null;
 let untrack = false;
