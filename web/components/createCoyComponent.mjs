@@ -7,17 +7,18 @@ function createCoyComponent(tag, args = []) {
 
   let element = document.createElement(tag);
 
-  // if (refFn) {
-  //   if (typeof refFn === "function") {
-  //     if (this.tag !== "fragment") {
-  //       refFn(this.element);
-  //     } else {
-  //       console.error("You cannot attach a ref in a fragment component");
-  //     }
-  //   } else {
-  //     console.error("Ref prop must be a function");
-  //   }
-  // }
+  if (ref) {
+    if (typeof ref === "function") {
+      if (tag !== "fragment") {
+        // @ts-ignore
+        ref(element);
+      } else {
+        console.error("You cannot attach a ref in a fragment component");
+      }
+    } else {
+      console.error("Ref prop must be a function");
+    }
+  }
 
   return {
     element,

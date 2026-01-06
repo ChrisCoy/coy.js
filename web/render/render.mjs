@@ -15,7 +15,7 @@ function render(entryPoint, component) {
   iterateRecursive(entryPoint, component);
 }
 
-TODO: fix oldState validation, component is re rendered even when oldState === result
+// TODO: fix oldState validation, component is re rendered even when oldState === result
 function iterateRecursive(father, coyElement) {
   const typeofCoyElement = typeof coyElement;
 

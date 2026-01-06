@@ -1,5 +1,5 @@
 import { Div, Fragment } from "../components.mjs";
-import { memo, react, signal } from "../signal.mjs";
+import { effect, memo, react, signal } from "../signal.mjs";
 
 const Inside = (texto) => {
   return Div(texto);
@@ -7,6 +7,8 @@ const Inside = (texto) => {
 
 const Dynamic = () => {
   const [count, setCount] = signal(0);
+
+  
 
   setInterval(() => {
     setCount((c) => c + 1);
@@ -19,11 +21,11 @@ const Dynamic = () => {
       2: Div("Two"),
       3: Div("Three"),
     };
-
     return memo(() => map[count()] || Div("Many"));
   };
 
-  return Div("Count: ", Comp());
+
+  return Div("Count: ", Comp(), {ref: console.log});
 };
 
 const OutroComponent = (texto) => {
