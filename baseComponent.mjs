@@ -6,7 +6,7 @@ import {
   isCoySignal,
   setPropertiesAndListenToSignals,
 } from "./signal.mjs";
-import { isStringNodeByTypeof, swipeItemsOnArray } from "./web/utils/utils.mjs";
+import { isStringByTypeof, swipeItemsOnArray } from "./web/utils/utils.mjs";
 
 export function isCoyComponent(component) {
   if (component instanceof BaseComponent) {
@@ -181,7 +181,7 @@ export class BaseComponent {
       return toCreate;
     }
 
-    if (isStringNodeByTypeof(typeofChild)) {
+    if (isStringByTypeof(typeofChild)) {
       const el = new BaseComponent("text", [toCreate]);
       return el;
     }

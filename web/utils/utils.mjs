@@ -14,7 +14,7 @@
 
 import { react } from "../../signal.mjs";
 
-export const isStringNodeByTypeof = (type) => {
+export const isStringByTypeof = (type) => {
   if (type === "string" || type === "number" || type === "boolean") {
     return true;
   }

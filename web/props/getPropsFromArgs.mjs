@@ -1,4 +1,4 @@
-import { HTMLElementSymbol } from "../components/createCoyComponent.mjs";
+import { $CoyComponent } from "../components/createCoyComponent.mjs";
 import { Props } from "./props.mjs";
 
 function getPropsFromArgs(args = []) {
@@ -6,6 +6,10 @@ function getPropsFromArgs(args = []) {
 
   const { children, propsObjs } = args.reduce(
     (acc, arg) => {
+      if (arg === undefined || arg === null) {
+        return acc;
+      }
+
       if (arg instanceof Props) {
         const { ref, ...rest } = arg.props;
         refFn = ref;
@@ -13,8 +17,8 @@ function getPropsFromArgs(args = []) {
         return acc;
       }
 
-      if(arg[HTMLElementSymbol]){
-        acc.children.push(arg)
+      if (arg[$CoyComponent]) {
+        acc.children.push(arg);
         return acc;
       }
 

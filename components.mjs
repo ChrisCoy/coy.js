@@ -140,14 +140,14 @@ export const Var = (...args) => createCoyComponent("var", args);
 export const Video = (...args) => createCoyComponent("video", args);
 export const Wbr = (...args) => createCoyComponent("wbr", args);
 
-export const Fragment = (...args) => createCoyComponent("fragment", args);
+export const Fragment = (...args) => createCoyComponent("Fragment", args);
 
 export const CustomComponent = (tag, ...args) => createCoyComponent(tag, args);
 
 export const Show = ({ when, content, fallBack = undefined }) => {
   let lastState = null;
 
-  return createCoyComponent("fragment");
+  return createCoyComponent("Fragment");
 
   if (isCoySignal(when)) {
     const container = createCoyComponent("fragment");

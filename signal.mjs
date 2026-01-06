@@ -1,4 +1,4 @@
-import { isStringNodeByTypeof } from "./web/utils/utils.mjs";
+import { isStringByTypeof } from "./web/utils/utils.mjs";
 
 let context = null;
 let untrack = false;
@@ -91,12 +91,15 @@ export function computed(fn) {
   return getState;
 }
 
+// TODO: consertar funcao memo, essa precisa que retorna o valor, mas precisamos criar uma que funciona pelo contexto do signal
 export function memo(fn) {
   const [getState, setState] = signal();
 
   effect(() => {
-    const result = fn();
+    debugger;
     const oldState = peek(getState);
+    const result = fn(oldState);
+    console.log(context);
 
     if (
       Array.isArray(result) &&
@@ -137,7 +140,7 @@ export function batch(fn) {
 export function setPropertiesAndListenToSignals(cursor, key, prop) {
   const typeofProp = typeof prop;
 
-  if (isStringNodeByTypeof(typeofProp)) {
+  if (isStringByTypeof(typeofProp)) {
     cursor[key] = prop;
     return;
   }
