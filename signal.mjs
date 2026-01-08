@@ -93,13 +93,12 @@ export function computed(fn) {
 
 // TODO: consertar funcao memo, essa precisa que retorna o valor, mas precisamos criar uma que funciona pelo contexto do signal
 export function memo(fn) {
+  let dirty;
   const [getState, setState] = signal();
 
   effect(() => {
-    debugger;
     const oldState = peek(getState);
     const result = fn(oldState);
-    console.log(context);
 
     if (
       Array.isArray(result) &&

@@ -1,9 +1,12 @@
-import { isCoySignal, memo } from "../../signal.mjs";
+import {
+  isCoySignal,
+  memo,
+  setPropertiesAndListenToSignals,
+} from "../../signal.mjs";
 import { $CoyComponent } from "../components/createCoyComponent.mjs";
-import { isStringByTypeof } from "../utils/utils.mjs";
+import { deepEqual, isStringByTypeof } from "../utils/utils.mjs";
 
 function render(entryPoint, component) {
-  debugger;
   if (!entryPoint || !(entryPoint instanceof Element)) {
     throw new Error("EntryPoint must be a DOM node");
   }
@@ -15,7 +18,6 @@ function render(entryPoint, component) {
   iterateRecursive(entryPoint, component);
 }
 
-// TODO: fix oldState validation, component is re rendered even when oldState === result
 function iterateRecursive(father, coyElement) {
   const typeofCoyElement = typeof coyElement;
 
@@ -62,18 +64,28 @@ function iterateRecursive(father, coyElement) {
       }
 
       if (result[$CoyComponent]) {
+        Object.entries(result.props).forEach(([key, value]) => {
+          setPropertiesAndListenToSignals(result.element, key, value);
+        });
+
         if (!element) {
           father.appendChild(result.element);
-          
-          result.children.forEach((c) => {
-            iterateRecursive(result.element, c);
-          });
-        } else if (oldResult !== result) {
-          father.replaceChild(result.element, element);
 
           result.children.forEach((c) => {
             iterateRecursive(result.element, c);
           });
+        } else if (oldResult !== result) {
+          if (
+            !oldResult.type == result.type ||
+            !deepEqual(oldResult.children, result.children)
+            // !deepEqual(oldResult.props, result.props)
+          ) {
+            father.replaceChild(result.element, element);
+
+            result.children.forEach((c) => {
+              iterateRecursive(result.element, c);
+            });
+          }
         }
         element = result.element;
         return result;
@@ -84,8 +96,18 @@ function iterateRecursive(father, coyElement) {
     return;
   }
 
-  debugger;
-  depoisDouUmNomeMelhor(father, coyElement.children);
+  Object.entries(coyElement.props).forEach(([key, value]) => {
+    setPropertiesAndListenToSignals(coyElement.element, key, value);
+  });
+
+  debugger
+  if(coyElement.type === "Fragment"){
+    depoisDouUmNomeMelhor(father, coyElement.children);
+  } else {
+    father.appendChild(coyElement.element)
+    depoisDouUmNomeMelhor(coyElement.element, coyElement.children);
+  }
+
 }
 
 function depoisDouUmNomeMelhor(father, children) {

@@ -1,5 +1,5 @@
 import { Div, Fragment } from "../components.mjs";
-import { effect, memo, react, signal } from "../signal.mjs";
+import { memo, signal } from "../signal.mjs";
 
 const Inside = (texto) => {
   return Div(texto);
@@ -8,24 +8,21 @@ const Inside = (texto) => {
 const Dynamic = () => {
   const [count, setCount] = signal(0);
 
-  
-
   setInterval(() => {
     setCount((c) => c + 1);
   }, 1000);
 
   const Comp = () => {
     const map = {
-      0: Div("Zero"),
-      1: Div("One"),
-      2: Div("Two"),
-      3: Div("Three"),
+      0: Div("Zero", { id: Math.random() }),
+      1: Div("One", { id: Math.random() }),
+      2: Div("Two", { id: Math.random() }),
+      3: Div("Three", { id: Math.random() }),
     };
-    return memo(() => map[count()] || Div("Many"));
+    return memo(() => map[count()] || Div("Many", { id: count }));
   };
 
-
-  return Div("Count: ", Comp(), {ref: console.log});
+  return Div("Count: ", Comp(), { ref: console.log });
 };
 
 const OutroComponent = (texto) => {
@@ -43,7 +40,9 @@ const Componente = () => {
 };
 
 const RefactorTest = () => {
-  return Componente();
+  // return Componente();
+  debugger
+  return Div("Texto", { id: "refactor-test" });
 };
 
 export { RefactorTest };

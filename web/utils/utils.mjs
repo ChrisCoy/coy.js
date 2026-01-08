@@ -81,3 +81,46 @@ export function createRandomString(length = 8) {
   }
   return result;
 }
+
+
+export function deepEqual(a, b, seen = new WeakMap()) {
+  if (Object.is(a, b)) return true;
+
+  if (
+    typeof a !== 'object' ||
+    typeof b !== 'object' ||
+    a === null ||
+    b === null
+  ) {
+    return false;
+  }
+
+  if (seen.get(a) === b) return true;
+  seen.set(a, b);
+
+  if (a.constructor !== b.constructor) return false;
+
+  if (a instanceof Date) {
+    return a.getTime() === b.getTime();
+  }
+
+  if (Array.isArray(a)) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (!deepEqual(a[i], b[i], seen)) return false;
+    }
+    return true;
+  }
+
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+
+  if (keysA.length !== keysB.length) return false;
+
+  for (const key of keysA) {
+    if (!keysB.includes(key)) return false;
+    if (!deepEqual(a[key], b[key], seen)) return false;
+  }
+
+  return true;
+}
