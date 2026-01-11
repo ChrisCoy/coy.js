@@ -5,7 +5,7 @@ let untrack = false;
 let batching = false;
 let batchContextStack = new Set();
 
-const $$SignalType = Symbol("$$SignalType");
+export const $$SignalType = Symbol("$$SignalType");
 const $$SignalGetter = Symbol("$$SignalGetter");
 const $$SignalSetter = Symbol("$$SignalSetter");
 

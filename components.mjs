@@ -1,15 +1,20 @@
-import { BaseComponent, Props } from "./baseComponent.mjs";
 import {
   batch,
   effect,
   effectOnDependencies,
   isCoySignal,
+  memo,
   react,
   signal,
   signalToObject,
 } from "./signal.mjs";
 import { createCoyComponent } from "./web/components/createCoyComponent.mjs";
-import { findDuplicates, hasDuplicates, swipeItemsOnArray } from "./web/utils/utils.mjs";
+import { Props } from "./web/props/props.mjs";
+import {
+  findDuplicates,
+  hasDuplicates,
+  swipeItemsOnArray,
+} from "./web/utils/utils.mjs";
 
 // TODO: to have a better typescript support we can pass the tag as the generic
 export const props = (p) => new Props(p);
@@ -147,7 +152,7 @@ export const CustomComponent = (tag, ...args) => createCoyComponent(tag, args);
 export const Show = ({ when, content, fallBack = undefined }) => {
   let lastState = null;
 
-  return createCoyComponent("Fragment");
+  return Fragment(memo(() => (when() ? content : fallBack)));
 
   if (isCoySignal(when)) {
     const container = createCoyComponent("fragment");
@@ -193,21 +198,32 @@ export const ShowMap = ({ key, map, fallBack }) => {
   });
 };
 
-export const List = ({ data, render = (d) => d, keyExtractor }) => {
+export const List = ({ data, render = (d) => d, keyExtractor = () => {} }) => {
   //TODO: to avoid the problem of listing don't having the parent node, we have to
   // implement a life cycle hook that will be called when the node is added to the tree
 
-  if (!Array.isArray(data) == !isCoySignal(data)) {
-    throw new Error(
-      "Data property on List must be an array or a signal that returns an Array"
-    );
-  }
+  return Fragment(
+    ...(data?.()?.map(d => memo(() => render(signal(d)[0]))) || [])
+  )
+  
+  return Fragment(
+    memo(() => data?.()?.map((d) => signal(render(signal(d)[0]))[0])) || []
+  );
+  // return memo(() =>
+  //   Fragment(...(data?.()?.map((d) => signal(render(signal(d)[0]))[0]) || []))
+  // );
 
-  const container = createCoyComponent("fragment", [
-    props({ id: Math.random() }),
-  ]);
+  // if (!Array.isArray(data) == !isCoySignal(data)) {
+  //   throw new Error(
+  //     "Data property on List must be an array or a signal that returns an Array"
+  //   );
+  // }
 
-  return container;
+  // const container = createCoyComponent("fragment", [
+  //   props({ id: Math.random() }),
+  // ]);
+
+  // return container;
 
   if (isCoySignal(data)) {
     if (!keyExtractor) {
@@ -309,10 +325,8 @@ export const List = ({ data, render = (d) => d, keyExtractor }) => {
     //   component.renderChildren();
     //   container.appendChild(component, true);
     // });
-
     // data.forEach((d) => {
     //   const result = createElement(render(d));
-
     //   container.children.push(result);
     // });
   }

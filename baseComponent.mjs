@@ -6,6 +6,7 @@ import {
   isCoySignal,
   setPropertiesAndListenToSignals,
 } from "./signal.mjs";
+import { Props } from "./web/props/props.mjs";
 import { isStringByTypeof, swipeItemsOnArray } from "./web/utils/utils.mjs";
 
 export function isCoyComponent(component) {
@@ -46,14 +47,14 @@ export class BaseComponent {
         }
 
         // to check if it's a plain object
-        if(arg?.constructor === Object){
+        if (arg?.constructor === Object) {
           const { ref, ...rest } = arg;
           refFn = ref;
           acc.propsObjs.push(rest);
           return acc;
         }
 
-        if(!!arg){
+        if (!!arg) {
           acc.children.push(arg);
         }
 
@@ -315,8 +316,3 @@ export class BaseComponent {
     Div(props({id: "text", style: {}}))
     H1(props({h1: "text"}))
  */
-export class Props {
-  constructor(props) {
-    this.props = props;
-  }
-}

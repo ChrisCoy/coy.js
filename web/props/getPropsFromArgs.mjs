@@ -6,7 +6,6 @@ function getPropsFromArgs(args = []) {
 
   const { children, propsObjs } = args.reduce(
     (acc, arg) => {
-      debugger
       if (arg === undefined || arg === null) {
         return acc;
       }
@@ -45,11 +44,11 @@ function getPropsFromArgs(args = []) {
     { children: [], propsObjs: [] }
   );
 
-  let props = {}
+  let props = {};
 
-  Object.assign(props, ...propsObjs)
+  Object.assign(props, ...propsObjs);
 
-  return { children, props: propsObjs, ref: refFn };
+  return { children, props: props, ref: refFn };
 }
 
 export { getPropsFromArgs };

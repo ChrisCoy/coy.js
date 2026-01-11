@@ -1,5 +1,6 @@
 import { BaseComponent } from "./baseComponent.mjs";
 import { props } from "./components.mjs";
+import { createCoyComponent } from "./web/components/createCoyComponent.mjs";
 import { createRandomString } from "./web/utils/utils.mjs";
 
 const cssProps = new Set();
@@ -139,7 +140,6 @@ const styled = (tagOrComponent) => {
                 cssRule = rule;
               }
             }
-            debugger;
 
             cssRule.style[key] = "pink";
           }, 2000);
@@ -180,6 +180,11 @@ const styled = (tagOrComponent) => {
 
     if (typeof tagOrComponent === "string") {
       return (...args) => {
+        return createCoyComponent(tagOrComponent, [
+          ...args,
+          // props({ className }),
+          { className },
+        ]);
         return new BaseComponent(tagOrComponent, [
           ...args,
           props({ className }),

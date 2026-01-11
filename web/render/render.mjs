@@ -18,6 +18,7 @@ function render(entryPoint, component) {
   iterateRecursive(entryPoint, component);
 }
 
+// TODO: think about better names for this function
 function iterateRecursive(father, coyElement) {
   const typeofCoyElement = typeof coyElement;
 
@@ -26,8 +27,30 @@ function iterateRecursive(father, coyElement) {
     return;
   }
 
+  if (coyElement[$CoyComponent]) {
+    if (coyElement.type === "Fragment") {
+      coyElement.children.forEach((e) => {
+        iterateRecursive(father, e);
+      });
+      return;
+    } else {
+      Object.entries(coyElement.props).forEach(([key, value]) => {
+        setPropertiesAndListenToSignals(coyElement.element, key, value);
+      });
+
+      father.appendChild(coyElement.element);
+
+      coyElement.children.forEach((e) => {
+        iterateRecursive(coyElement.element, e);
+      });
+      return;
+    }
+  }
+
   if (isCoySignal(coyElement)) {
     let element;
+
+    // TODO: refactor this ugly code
     memo((oldResult) => {
       const result = coyElement();
       const typeofResult = typeof result;
@@ -69,64 +92,59 @@ function iterateRecursive(father, coyElement) {
         });
 
         if (!element) {
-          father.appendChild(result.element);
+          if (result.type === "Fragment") {
+            result.children.forEach((c) => {
+              iterateRecursive(father, c);
+            });
+          } else {
+            Object.entries(result.props).forEach(([key, value]) => {
+              setPropertiesAndListenToSignals(result.element, key, value);
+            });
 
-          result.children.forEach((c) => {
-            iterateRecursive(result.element, c);
-          });
-        } else if (oldResult !== result) {
-          if (
-            !oldResult.type == result.type ||
-            !deepEqual(oldResult.children, result.children)
-            // !deepEqual(oldResult.props, result.props)
-          ) {
-            father.replaceChild(result.element, element);
+            father.appendChild(result.element);
 
             result.children.forEach((c) => {
               iterateRecursive(result.element, c);
             });
           }
+
+          element = result.element;
+          return result;
+        } else if (oldResult !== result) {
+          // TODO: we need to check if the tree changed and then apply the difference,
+          // somewhat similar to what react does
+          if (
+            !oldResult.type == result.type ||
+            !deepEqual(oldResult.children, result.children)
+          ) {
+            if (result.type === "Fragment") {
+              father.replaceChildren();
+              result.children.forEach((c) => {
+                iterateRecursive(father, c);
+              });
+            } else {
+              Object.entries(result.props).forEach(([key, value]) => {
+                setPropertiesAndListenToSignals(result.element, key, value);
+              });
+
+              father.replaceChild(result.element, element);
+              result.children.forEach((c) => {
+                iterateRecursive(result.element, c);
+              });
+            }
+
+            element = result.element;
+            return result;
+          }
         }
-        element = result.element;
-        return result;
       }
 
-      throw new Error("TODO: better error message");
+      return result;
     });
     return;
   }
 
-  Object.entries(coyElement.props).forEach(([key, value]) => {
-    setPropertiesAndListenToSignals(coyElement.element, key, value);
-  });
-
-  debugger
-  if(coyElement.type === "Fragment"){
-    depoisDouUmNomeMelhor(father, coyElement.children);
-  } else {
-    father.appendChild(coyElement.element)
-    depoisDouUmNomeMelhor(coyElement.element, coyElement.children);
-  }
-
-}
-
-function depoisDouUmNomeMelhor(father, children) {
-  for (let i = 0; i < children.length; i++) {
-    const child = children[i];
-
-    father.appendChild(child.element);
-    if (child.type === "Fragment") {
-      child.children.forEach((c) => {
-        iterateRecursive(father, c);
-      });
-    } else if (child[$CoyComponent]) {
-      child.children.forEach((c) => {
-        iterateRecursive(child.element, c);
-      });
-    } else {
-      throw new Error("TODO BETTER ERROR");
-    }
-  }
+  throw new Error("TODO: better error message");
 }
 
 export { render };

@@ -10,7 +10,7 @@ const Layout = (child) => {
     {
       className: "min-h-screen w-full grid place-items-center bg-zinc-100 p-4",
     },
-    ToastProviderGlobal(),
+    // ToastProviderGlobal(),
     child
   );
 };

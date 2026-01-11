@@ -1,8 +1,24 @@
-import { Div, Fragment } from "../components.mjs";
-import { memo, signal } from "../signal.mjs";
+import { Div, Fragment, List } from "../components.mjs";
+import {
+  $$SignalType,
+  effectOnDependencies,
+  memo,
+  signal,
+} from "../signal.mjs";
 
 const Inside = (texto) => {
   return Div(texto);
+};
+
+const Show = ({ when, content }) => {
+  const [component, setComponent] = signal();
+  when[$$SignalType] = $$SignalType;
+
+  effectOnDependencies(() => {
+    setComponent(component());
+  }, [when]);
+
+  return component;
 };
 
 const Dynamic = () => {
@@ -40,9 +56,13 @@ const Componente = () => {
 };
 
 const RefactorTest = () => {
+  return List({
+    data: signal([1, 2, 3, 4, 5])[0],
+    render: (item) => Div("Item: " + item()),
+  });
+  // return Counter()
   // return Componente();
-  debugger
-  return Div("Texto", { id: "refactor-test" });
+  // return Div("Texto", { id: "refactor-test" });
 };
 
 export { RefactorTest };
