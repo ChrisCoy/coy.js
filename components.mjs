@@ -1,20 +1,6 @@
-import {
-  batch,
-  effect,
-  effectOnDependencies,
-  isCoySignal,
-  memo,
-  react,
-  signal,
-  signalToObject,
-} from "./signal.mjs";
+import { isCoySignal, memo } from "./signal.mjs";
 import { createCoyComponent } from "./web/components/createCoyComponent.mjs";
 import { Props } from "./web/props/props.mjs";
-import {
-  findDuplicates,
-  hasDuplicates,
-  swipeItemsOnArray,
-} from "./web/utils/utils.mjs";
 
 // TODO: to have a better typescript support we can pass the tag as the generic
 export const props = (p) => new Props(p);
@@ -28,7 +14,7 @@ export const fromArgs = (args) => {
       }
       return acc;
     },
-    { propsObjs: [] }
+    { propsObjs: [] },
   );
 
   return Object.assign({}, ...propsObjs);
@@ -152,42 +138,15 @@ export const CustomComponent = (tag, ...args) => createCoyComponent(tag, args);
 export const Show = ({ when, content, fallBack = undefined }) => {
   let lastState = null;
 
-  return Fragment(memo(() => (when() ? content : fallBack)));
-
-  if (isCoySignal(when)) {
-    const container = createCoyComponent("fragment");
-
-    effect(() => {
-      const mustShowContent = when();
-      if (mustShowContent !== lastState) {
-        const isFallBack =
-          mustShowContent === false ||
-          mustShowContent === null ||
-          mustShowContent === undefined;
-
-        // container.removeAllChildren();
-
-        // let component;
-        // if (!isFallBack && content) {
-        //   component = container.appendChild(content);
-        // } else {
-        //   component = container.appendChild(fallBack);
-        // }
-
-        // component.renderChildren()
-
-        // if(component.tag === "void" && fallBack) {
-        //   component = createElement(fallBack)
-        // }
-
-        lastState = mustShowContent;
-      }
-    });
-
-    return container;
-  } else {
-    return !!when ? content : fallBack;
+  if (content !== undefined && typeof content !== "function") {
+    throw new Error("Content must be a function");
   }
+
+  if (fallBack !== undefined && typeof fallBack !== "function") {
+    throw new Error("FallBack must be a function");
+  }
+
+  return memo(() => (when() ? content?.() : fallBack?.()));
 };
 
 export const ShowMap = ({ key, map, fallBack }) => {
@@ -198,150 +157,34 @@ export const ShowMap = ({ key, map, fallBack }) => {
   });
 };
 
-export const List = ({ data, render = (d) => d, keyExtractor = () => {} }) => {
-  //TODO: to avoid the problem of listing don't having the parent node, we have to
-  // implement a life cycle hook that will be called when the node is added to the tree
-
-  return Fragment(
-    ...(data?.()?.map(d => memo(() => render(signal(d)[0]))) || [])
-  )
-  
-  return Fragment(
-    memo(() => data?.()?.map((d) => signal(render(signal(d)[0]))[0])) || []
-  );
-  // return memo(() =>
-  //   Fragment(...(data?.()?.map((d) => signal(render(signal(d)[0]))[0]) || []))
-  // );
-
-  // if (!Array.isArray(data) == !isCoySignal(data)) {
-  //   throw new Error(
-  //     "Data property on List must be an array or a signal that returns an Array"
-  //   );
-  // }
-
-  // const container = createCoyComponent("fragment", [
-  //   props({ id: Math.random() }),
-  // ]);
-
-  // return container;
-
-  if (isCoySignal(data)) {
-    if (!keyExtractor) {
-      throw new Error("You must pass the key keyExtractor function");
-    }
-
-    const signals = [];
-    let keys = [];
-
-    effectOnDependencies(() => {
-      // @ts-ignore
-      const result = data() || [];
-      if (!Array.isArray(result)) {
-        throw new Error(
-          "Data property on List must be an array or a signal that returns an Array"
-        );
-      }
-
-      const newKeys = result.map((r) => keyExtractor(react(() => r))) || [];
-
-      if (hasDuplicates(newKeys)) {
-        const duplicates = findDuplicates(newKeys)
-          .map((k) => `key: ${k}`)
-          .join(", ");
-        throw new Error(
-          `Has some non unique key, ${duplicates}, please use unique values`
-        );
-      }
-
-      const permutationsIndexes = [];
-
-      // check for removed items
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        if (!newKeys.includes(key)) {
-          signals.splice(i, 1);
-          keys.splice(i, 1);
-
-          // if (container.parent) {
-          //   container.removeChildAt(i);
-          // }
-
-          i = i - 1;
-        }
-      }
-
-      batch(() => {
-        for (let i = 0; i < newKeys.length; i++) {
-          const key = newKeys[i];
-          const oldKeyIndex = keys.findIndex((k) => k === key);
-
-          if (oldKeyIndex === i) {
-            // when node stills in the same place
-            // we have to run the signal again because the data may have change.
-            signals[i].set(result[i]);
-          } else if (oldKeyIndex === -1) {
-            // when node is new
-            // @ts-ignore
-            signals.splice(i, 0, signalToObject(signal(result[i])));
-
-            // const component = createElement(render(signals[i].get));
-            // const component = createElement(render(memo(signals[i].get)));
-
-            const component = render(signals[i].get);
-            // component.parent = container.parent;
-            component.renderChildren();
-
-            console.log(component);
-
-            // container.appendChild(component, true);
-            // container.children.push(component);
-
-            // component.parent = container.parent;
-
-            // populateNodesDOM(component);
-          } else if (
-            !permutationsIndexes.includes(oldKeyIndex) ||
-            !permutationsIndexes.includes(i)
-          ) {
-            // when node changed it's place
-            swipeItemsOnArray(signals, oldKeyIndex, i);
-            // if (container.parent) {
-            //   container.swapChildPlaces(oldKeyIndex, i);
-            // }
-
-            signals[i].set(result[i]);
-            signals[oldKeyIndex].set(result[oldKeyIndex]);
-            permutationsIndexes.push(oldKeyIndex, i);
-          }
-        }
-      });
-
-      keys = newKeys;
-    }, [data]);
-  } else {
-    // data.forEach((d) => {
-    //   const component = render(d);
-    //   component.parent = container.parent;
-    //   component.renderChildren();
-    //   container.appendChild(component, true);
-    // });
-    // data.forEach((d) => {
-    //   const result = createElement(render(d));
-    //   container.children.push(result);
-    // });
+export const List = ({ data, render = (d) => d, keyExtractor }) => {
+  if (!Array.isArray(data) == !isCoySignal(data)) {
+    throw new Error(
+      "Data property on List must be an array or a signal that returns an Array",
+    );
   }
 
-  return container;
+  if (!keyExtractor) {
+    throw new Error("You must pass the key keyExtractor function");
+  }
+
+  return createCoyComponent("List", [{ data, render, keyExtractor }]);
 };
 
 export const ListView = ({ data, render, keyExtractor, empty = undefined }) => {
-  return Show({
-    when: react(() => (data() || []).length > 0),
-    content: List({
-      data,
-      render,
-      keyExtractor,
-    }),
-    fallBack: empty,
+  return List({
+    data,
+    render,
+    keyExtractor,
   });
+  // return Show({
+  //   when: react(() => (data() || []).length > 0),
+  //   content: () =>
+  //     List({
+  //       data,
+  //       render,
+  //       keyExtractor,
+  //     }),
+  //   fallBack: empty,
+  // });
 };

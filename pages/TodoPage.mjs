@@ -1,6 +1,6 @@
 import { Button, Div, H1, Hr, Input, ListView } from "../components.mjs";
-import { effect, react, signal } from "../signal.mjs";
-import { ToastProviderGlobal, useToast } from "../toast.mjs";
+import { effect, memo, react, signal } from "../signal.mjs";
+import { useToast } from "../toast.mjs";
 import { cn, idGenerator } from "../web/utils/utils.mjs";
 
 const genId = idGenerator();
@@ -17,6 +17,11 @@ const Layout = (child) => {
 
 const TodoItem = ({ todoSignal, onDone, onRemove }) => {
   console.log("look how this log only runs once for each item", todoSignal());
+
+  effect(() => {
+    console.log(todoSignal());
+    
+  })
 
   return Div(
     {
@@ -113,7 +118,7 @@ export const TodoPage = () => {
             onDone: () => handleTodoToggle(todo().id),
             onRemove: () => handleRemoveTodo(todo().id),
           }),
-        empty: Div({ className: "text-center" }, "Nenhuma todo cadastrada."),
+        empty: () => Div({ className: "text-center" }, "Nenhuma todo cadastrada."),
       }),
       Hr(),
       Div(

@@ -5,11 +5,15 @@ export const $CoyComponent = Symbol("$CoyComponent");
 function createCoyComponent(tag, args = []) {
   const { children, props, ref } = getPropsFromArgs(args);
 
-  let element = document.createElement(tag);
+  let element;
+
+  if(tag !== "fragment" && tag !== "List"){
+    element = document.createElement(tag);
+  }
 
   if (ref) {
     if (typeof ref === "function") {
-      if (tag !== "fragment") {
+      if (tag !== "fragment" && tag !== "List") {
         // @ts-ignore
         ref(element);
       } else {

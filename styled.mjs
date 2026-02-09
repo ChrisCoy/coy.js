@@ -176,7 +176,7 @@ const styled = (tagOrComponent) => {
 
     styleTag.textContent += selectorsStyles + rulesStyles;
 
-    console.log(styleTag.textContent);
+    // console.log(styleTag.textContent);
 
     if (typeof tagOrComponent === "string") {
       return (...args) => {

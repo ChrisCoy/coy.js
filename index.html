@@ -153,12 +153,14 @@
       ];
 
       const Home = () => {
-        return Fragment(RoutesProvider(routes, {}));
+        return Fragment(RoutesProvider(routes));
       };
 
       render(
         document.querySelector("#app"),
         TodoPage()
+        // ListExample()
+        // Counter()
         // Fragment(
         //   TodoPage(),
         //   FragmentTest(),

@@ -1,0 +1,3 @@
+refatorar o render para que ele aceite apenas signals que retorne tipo primitivo como texto e numberos ou false/true
+
+lembre-se, keep it stupid simple

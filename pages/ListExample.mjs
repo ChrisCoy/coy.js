@@ -1,5 +1,5 @@
-import { Div, List, Show } from "../components.mjs";
-import { react, signal } from "../signal.mjs";
+import { Div, List } from "../components.mjs";
+import { memo, signal } from "../signal.mjs";
 
 const ListExample = () => {
   const [list, setList] = signal([
@@ -15,18 +15,26 @@ const ListExample = () => {
   //   setList((old) => [...old, { label: Math.random().toString() }]);
   // }, 200);
 
-  // setInterval(() => {
-  //   setList((old) => old.reverse());
-  // }, 2000);
+  setInterval(() => {
+    setList((old) => old.reverse());
+  }, 2000);
 
-  return Show({
-    when: react(() => true),
-    content: List({
+  // return Show({
+  //   when: react(() => true),
+  //   content: List({
+  //     data: list,
+  //     render: (item) => Div(item().label),
+  //     keyExtractor: (item) => item().label,
+  //   }),
+  // });
+
+  return memo(() =>
+    List({
       data: list,
       render: (item) => Div(item().label),
       keyExtractor: (item) => item().label,
     }),
-  });
+  );
 };
 
 export { ListExample };

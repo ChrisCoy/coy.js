@@ -1,4 +1,4 @@
-import { Button, Div, H1 } from "../components.mjs";
+import { Button, Div, H1, Show } from "../components.mjs";
 import { signal } from "../signal.mjs";
 
 const Counter = () => {
@@ -12,15 +12,20 @@ const Counter = () => {
     H1(count, { className: "text-6xl font-bold" }),
     Div(
       { className: "flex gap-2 justify-center" },
+      Button("➖", {
+        className: buttonClassName,
+        onclick: () => setCount((prev) => prev - 1),
+      }),
       Button("➕", {
         className: buttonClassName,
         onclick: () => setCount((prev) => prev + 1),
       }),
-      Button("➖", {
-        className: buttonClassName,
-        onclick: () => setCount((prev) => prev - 1),
-      })
-    )
+    ),
+    Show({
+      when: () => count() > 1,
+      content: () => Div("oi :D"),
+      fallBack: () => Div("Bobão"),
+    }),
   );
 };
 
