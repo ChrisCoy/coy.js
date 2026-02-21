@@ -26,7 +26,6 @@ const formatUrl = (url = "") => {
 
   return newUrl;
 };
-/** @type {BaseComponent} */
 let outletCtx = null;
 
 const [currentRoute, setCurrentRoute] = signal(

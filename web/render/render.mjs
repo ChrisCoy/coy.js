@@ -1,8 +1,6 @@
 import {
   batch,
   effectOnDependencies,
-  isCoySignal,
-  memo,
   react,
   setPropertiesAndListenToSignals,
   signal,
@@ -10,7 +8,6 @@ import {
 } from "../../signal.mjs";
 import { $CoyComponent } from "../components/createCoyComponent.mjs";
 import {
-  deepEqual,
   findDuplicates,
   hasDuplicates,
   isStringByTypeof,
@@ -22,11 +19,21 @@ function render(entryPoint, component) {
     throw new Error("EntryPoint must be a DOM node");
   }
 
+  console.log(component);
+
   // if (!component || !component[$CoyComponent]) {
   //   throw new Error("Component must be a Coy component");
-  // }
 
+  // }
   iterateRecursive(entryPoint, component);
+}
+
+function coyAppendNode(father, newNode) {
+  if (father.nodeType === Node.TEXT_NODE) {
+    father.after(newNode);
+  } else {
+    father.append(newNode);
+  }
 }
 
 // TODO: think about better names for this function
@@ -34,122 +41,154 @@ function iterateRecursive(father, coyElement) {
   const typeofCoyElement = typeof coyElement;
 
   if (isStringByTypeof(typeofCoyElement)) {
-    father.appendChild(document.createTextNode(coyElement));
-    return;
+    const newElement = document.createTextNode(coyElement);
+    coyAppendNode(father, newElement);
+    return newElement;
   }
 
   if (coyElement[$CoyComponent]) {
-    if (coyElement.type === "Fragment") {
+    if (coyElement.type === "$CoyFragment") {
       handleFragmentNode(father, coyElement);
-    } else if (coyElement.type === "List") {
+    } else if (coyElement.type === "$CoyList") {
       handleListNode(father, coyElement);
+    } else if (coyElement.type === "$CoyShow") {
+      handleShowNode(father, coyElement);
     } else {
       handleHTMLNode(father, coyElement);
     }
-
-    return;
   }
 
-  if (isCoySignal(coyElement)) {
-    let element;
+  return coyElement;
 
-    // TODO: refactor this ugly code
-    // a signal node must re-render even if the data didn't changed, this way we
-    // can simplify this piece of code
-    effectOnDependencies((oldResult) => {
-      const result = coyElement();
-      const typeofResult = typeof result;
+  // if (isCoySignal(coyElement)) {
+  //   let element;
 
-      if (result === undefined || result === null) {
-        if (element) {
-          father.removeChild(element);
-          element = null;
-        }
-        return result;
-      }
+  //   // TODO: refactor this ugly code
+  //   // a signal node must re-render even if the data didn't changed, this way we
+  //   // can simplify this piece of code
+  //   effectOnDependencies((oldResult) => {
+  //     const result = coyElement();
+  //     const typeofResult = typeof result;
 
-      if (isCoySignal(result)) {
-        iterateRecursive(father, result);
-        return result;
-      }
+  //     if (result === undefined || result === null) {
+  //       if (element) {
+  //         father.removeChild(element);
+  //         element = null;
+  //       }
+  //       return result;
+  //     }
 
-      if (isStringByTypeof(typeofResult)) {
-        if (!element) {
-          element = document.createTextNode(result);
-          father.appendChild(element);
-        } else if (
-          element.nodeType === Node.TEXT_NODE &&
-          oldResult !== result
-        ) {
-          element.textContent = result;
-        } else {
-          const newElement = document.createTextNode(result);
-          father.replaceChild(newElement, element);
-          element = newElement;
-        }
+  //     if (isCoySignal(result)) {
+  //       iterateRecursive(father, result);
+  //       return result;
+  //     }
 
-        return result;
-      }
+  //     if (isStringByTypeof(typeofResult)) {
+  //       if (!element) {
+  //         element = document.createTextNode(result);
+  //         father.appendChild(element);
+  //       } else if (
+  //         element.nodeType === Node.TEXT_NODE &&
+  //         oldResult !== result
+  //       ) {
+  //         element.textContent = result;
+  //       } else {
+  //         const newElement = document.createTextNode(result);
+  //         father.replaceChild(newElement, element);
+  //         element = newElement;
+  //       }
 
-      if (result && result[$CoyComponent]) {
-        if (!element) {
-          if (result.type === "Fragment") {
-            handleFragmentNode(father, result);
-            // result.children.forEach((c) => {
-            //   iterateRecursive(father, c);
-            // });
-          } else if (result.type === "List") {
-            handleListNode(father, result);
-          } else {
-            handleHTMLNode(father, result);
-            // Object.entries(result.props).forEach(([key, value]) => {
-            //   setPropertiesAndListenToSignals(result.element, key, value);
-            // });
+  //       return result;
+  //     }
 
-            // father.appendChild(result.element);
+  //     if (result && result[$CoyComponent]) {
+  //       if (!element) {
+  //         if (result.type === "Fragment") {
+  //           handleFragmentNode(father, result);
+  //           // result.children.forEach((c) => {
+  //           //   iterateRecursive(father, c);
+  //           // });
+  //         } else if (result.type === "List") {
+  //           handleListNode(father, result);
+  //         } else {
+  //           handleHTMLNode(father, result);
+  //           // Object.entries(result.props).forEach(([key, value]) => {
+  //           //   setPropertiesAndListenToSignals(result.element, key, value);
+  //           // });
 
-            // result.children.forEach((c) => {
-            //   iterateRecursive(result.element, c);
-            // });
-          }
+  //           // father.appendChild(result.element);
 
-          element = result.element;
-          return result;
-        } else if (oldResult !== result) {
-          // TODO: we need to check if the tree changed and then apply the difference,
-          // somewhat similar to what react does
-          if (
-            !oldResult.type == result.type ||
-            !deepEqual(oldResult.children, result.children)
-          ) {
-            if (result.type === "Fragment") {
-              father.replaceChildren();
-              result.children.forEach((c) => {
-                iterateRecursive(father, c);
-              });
-            } else {
-              Object.entries(result.props).forEach(([key, value]) => {
-                setPropertiesAndListenToSignals(result.element, key, value);
-              });
+  //           // result.children.forEach((c) => {
+  //           //   iterateRecursive(result.element, c);
+  //           // });
+  //         }
 
-              father.replaceChild(result.element, element);
-              result.children.forEach((c) => {
-                iterateRecursive(result.element, c);
-              });
-            }
+  //         element = result.element;
+  //         return result;
+  //       } else if (oldResult !== result) {
+  //         // TODO: we need to check if the tree changed and then apply the difference,
+  //         // somewhat similar to what react does
+  //         if (
+  //           !oldResult.type == result.type ||
+  //           !deepEqual(oldResult.children, result.children)
+  //         ) {
+  //           if (result.type === "Fragment") {
+  //             father.replaceChildren();
+  //             result.children.forEach((c) => {
+  //               iterateRecursive(father, c);
+  //             });
+  //           } else {
+  //             Object.entries(result.props).forEach(([key, value]) => {
+  //               setPropertiesAndListenToSignals(result.element, key, value);
+  //             });
 
-            element = result.element;
-            return result;
-          }
-        }
-      }
+  //             father.replaceChild(result.element, element);
+  //             result.children.forEach((c) => {
+  //               iterateRecursive(result.element, c);
+  //             });
+  //           }
 
-      return result;
-    }, [coyElement]);
-    return;
-  }
+  //           element = result.element;
+  //           return result;
+  //         }
+  //       }
+  //     }
+
+  //     return result;
+  //   }, [coyElement]);
+  //   return;
+  // }
 
   throw new Error("TODO: better error message");
+}
+
+function handleShowNode(father, coyElement) {
+  /** @type {any} */
+  let createdHtmlElement;
+  console.log(coyElement);
+
+  effectOnDependencies(() => {
+    const resultWhen = coyElement.props.when();
+
+    console.log("resultWhen", resultWhen);
+
+    if (createdHtmlElement && createdHtmlElement[$CoyComponent]) {
+      createdHtmlElement.element.remove();
+    } else if (createdHtmlElement) {
+      createdHtmlElement.remove();
+    }
+
+    if (resultWhen && coyElement.props.content) {
+      // createdHtmlElement = coyElement.props.content();
+      createdHtmlElement = iterateRecursive(father, coyElement.props.content());
+    } else {
+      createdHtmlElement = iterateRecursive(
+        father,
+        coyElement.props.fallBack(),
+      );
+      // createdHtmlElement = coyElement.props.fallBack();
+    }
+  }, [coyElement.props.when]);
 }
 
 function handleHTMLNode(father, coyElement) {
@@ -157,7 +196,8 @@ function handleHTMLNode(father, coyElement) {
     setPropertiesAndListenToSignals(coyElement.element, key, value);
   });
 
-  father.appendChild(coyElement.element);
+  // father.appendChild(coyElement.element);
+  coyAppendNode(father, coyElement.element);
 
   coyElement.children.forEach((e) => {
     iterateRecursive(coyElement.element, e);
@@ -273,6 +313,8 @@ function handleListNode(father, coyElement) {
   }, [coyElement.props.data]);
 }
 
+function handleTextNode(father, content) {}
+
 function swapNodes(origin, target) {
   if (
     (target[$CoyComponent] && !(target.element instanceof Node)) ||
@@ -280,7 +322,7 @@ function swapNodes(origin, target) {
   ) {
     throw new TypeError("swapNodes(a, b): a e b precisam ser Nodes do DOM");
   }
-  
+
   if (origin.element === target.element) return;
 
   const aParent = origin.element.parentNode,

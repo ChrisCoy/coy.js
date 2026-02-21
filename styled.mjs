@@ -5,7 +5,6 @@ import { createRandomString } from "./web/utils/utils.mjs";
 
 const cssProps = new Set();
 const allStylesSet = new Set();
-// /** @type {HTMLStyleElement} */
 let styleTag;
 const initLib = () => {
   for (const key in document.body.style) {

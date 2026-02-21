@@ -131,22 +131,34 @@ export const Var = (...args) => createCoyComponent("var", args);
 export const Video = (...args) => createCoyComponent("video", args);
 export const Wbr = (...args) => createCoyComponent("wbr", args);
 
-export const Fragment = (...args) => createCoyComponent("Fragment", args);
+export const Fragment = (...args) => createCoyComponent("$CoyFragment", args);
 
-export const CustomComponent = (tag, ...args) => createCoyComponent(tag, args);
+export const CustomHTMLComponent = (tag, ...args) => createCoyComponent(tag, args);
 
 export const Show = ({ when, content, fallBack = undefined }) => {
-  let lastState = null;
-
-  if (content !== undefined && typeof content !== "function") {
-    throw new Error("Content must be a function");
+  if(!isCoySignal(when)){
+    throw new Error("when must be a signal")
   }
 
-  if (fallBack !== undefined && typeof fallBack !== "function") {
-    throw new Error("FallBack must be a function");
+  if(content && typeof content !== "function"){
+    throw new Error("content must be a function that returns a component")
+  }
+  if(fallBack && typeof fallBack !== "function"){
+    throw new Error("fallBack must be a function that returns a component")
   }
 
-  return memo(() => (when() ? content?.() : fallBack?.()));
+  return createCoyComponent("$CoyShow", [{when: memo(() => when()), content, fallBack}])
+  // let lastState = null;
+
+  // if (content !== undefined && typeof content !== "function") {
+  //   throw new Error("Content must be a function");
+  // }
+
+  // if (fallBack !== undefined && typeof fallBack !== "function") {
+  //   throw new Error("FallBack must be a function");
+  // }
+
+  // return memo(() => (when() ? content?.() : fallBack?.()));
 };
 
 export const ShowMap = ({ key, map, fallBack }) => {
@@ -168,7 +180,7 @@ export const List = ({ data, render = (d) => d, keyExtractor }) => {
     throw new Error("You must pass the key keyExtractor function");
   }
 
-  return createCoyComponent("List", [{ data, render, keyExtractor }]);
+  return createCoyComponent("$CoyList", [{ data, render, keyExtractor }]);
 };
 
 export const ListView = ({ data, render, keyExtractor, empty = undefined }) => {

@@ -7,7 +7,6 @@
 
 //   if (typeofChild === "function") {
 //     let result = child();
-//     /** @type {BaseComponent} */
 //     const element = createElement(result);
 
 //     if (isCoySignal(child)) {
